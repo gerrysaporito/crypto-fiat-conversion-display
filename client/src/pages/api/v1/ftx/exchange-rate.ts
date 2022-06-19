@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { IExchangeRate } from '../../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../../utils/utility/Conversion';
 
-const ENDPOINT = `https://api.coinbase.com`;
+const ENDPOINT = `https://ftx.com/api`;
 
 /*
  * @Endpoint: returns the current price for a currency from a base currency.
@@ -17,10 +17,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     // Checked types above
     // @ts-ignore
-    const data: IExchangeRate = await getConversionData(
-      base as string,
-      desired as string
-    );
+    const data = await getConversionData(base as string, desired as string);
 
     await res.status(200).json(data);
   } catch (err: any) {
@@ -30,15 +27,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (err?.response?.data) {
       const _desired = (desired as string).toUpperCase();
       const _base = (base as string).toUpperCase();
-      const errorMessage = err.response.data.errors[0].message;
+      const errorMessage = err.response.data.error;
 
       // Check if known Coinbase error
-      switch (errorMessage) {
-        case 'Invalid desired': {
-          message = `'${_desired}' is not supported by the Coinbase API`;
+      switch (true) {
+        case errorMessage.includes('No such market:'): {
+          message = `Market cannot be found for: '${_base}-${_desired}'`;
           break;
         }
-        case 'Invalid base desired': {
+        case errorMessage.includes('hello'): {
           message = `'${_base}' is not supported by the Coinbase API`;
           break;
         }
@@ -93,17 +90,22 @@ const getConversionData = async (
   base: string,
   desired: string
 ): Promise<IExchangeRate> => {
-  const endpoint =
-    ENDPOINT + `/v2/exchange-rates?desired=${desired.toUpperCase()}`;
+  let market = `${desired}/${base}`;
+  if (Conversion.isFiat(base)) market = `${base}/${desired}`;
+  const endpoint = ENDPOINT + `/markets/${market}/orderbook?depth=1`;
 
   const {
-    data: { data },
+    data: {
+      result: { bids, asks },
+    },
   } = await axios.get(endpoint);
+
+  const rate = (bids[0][0] + asks[0][0]) / 2; // Average between highest bid and lowest ask
 
   const info = {
     base: base.toUpperCase(),
     desired: desired.toUpperCase(),
-    rate: data.rates[desired.toUpperCase()],
+    rate: rate,
   };
 
   return info;

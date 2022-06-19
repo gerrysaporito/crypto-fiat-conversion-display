@@ -60,20 +60,21 @@ describe(`'/api/v1/coinbase/get-exchange-rate' API Endpoint`, () => {
   });
 
   /*
-   * Can't test Coinbase's unsupported coins without triggering other guards first.
+   * Can't test FTX's unsupported markets without triggering other guards first.
    */
   // it('should fail and reject base crypto currency which is not supported by Coinbase', async () => {
-  //   const rejected = 'DOGE';
+  //   const query = {
+  //     base: 'USD',
+  //     desired: 'BTC',
+  //   };
   //   let res = await testHandler(exchangeRateHandlers, {
   //     method: 'GET',
-  //     query: {
-  //       base: 'USD',
-  //       desired: rejected,
-  //     },
+  //     query: query,
   //   });
+
   //   expect(res.statusCode).toBe(400);
   //   expect(res._getJSONData().message).toEqual(
-  //     `'${rejected}' is not supported by the Coinbase API`
+  //     `Market cannot be found for: '${query.base}-${query.desired}'`
   //   );
   // });
 

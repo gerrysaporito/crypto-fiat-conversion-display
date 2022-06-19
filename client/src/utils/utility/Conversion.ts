@@ -9,7 +9,20 @@ export class Conversion {
       ...Object.keys(EFiat).map((item) => item.toLowerCase()),
       ...Object.keys(ECrypto).map((item) => item.toLowerCase()),
     ]);
+    return symbols.has(currency.toLowerCase());
+  }
 
+  static isFiat(currency: string) {
+    const symbols = new Set(
+      Object.keys(ECrypto).map((item) => item.toLowerCase())
+    );
+    return symbols.has(currency.toLowerCase());
+  }
+
+  static isCrypto(currency: string) {
+    const symbols = new Set(
+      Object.keys(ECrypto).map((item) => item.toLowerCase())
+    );
     return symbols.has(currency.toLowerCase());
   }
 
