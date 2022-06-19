@@ -32,30 +32,32 @@ describe(`'/api/v1/coinbase/get-exchange-rate' API Endpoint`, () => {
   });
 
   it('should fail and reject base fiat currency which is not offered from list of offerings defined in this app', async () => {
+    const invalid = 'CHF';
     let res = await testHandler(exchangeRateHandlers, {
       method: 'GET',
       query: {
-        base: 'CHF',
+        base: invalid,
         desired: 'BTC',
       },
     });
     expect(res.statusCode).toBe(400);
     expect(res._getJSONData().message).toEqual(
-      `Base value is not supported: 'CHF'`
+      `Base value is not supported: '${invalid}'`
     );
   });
 
   it('should fail and reject base crypto currency which is not offered from list of offerings defined in this app', async () => {
+    const invalid = 'BCC';
     let res = await testHandler(exchangeRateHandlers, {
       method: 'GET',
       query: {
-        base: 'BTCC',
+        base: invalid,
         desired: 'USD',
       },
     });
     expect(res.statusCode).toBe(400);
     expect(res._getJSONData().message).toEqual(
-      "Base value is not supported: 'BTCC'"
+      "Base value is not supported: '${invalid}'"
     );
   });
 
