@@ -23,14 +23,16 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   const [timeLeft, setTimeLeft] = useState<number>(_cooldown);
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
+  const [exchangeRate, setExchangeRate] = useState<IExchangeRate | null>(null);
   const [baseAmount, setBaseAmount] = useState<string>('10');
   const [desiredAmount, setDesiredAmount] = useState<string>('0');
-  const [baseCurrency, setBaseCurrency] = useState<EFiat | ECrypto>(
+  const [baseCurrency, setBaseCurrency] = useState<EFiat | ECrypto>(EFiat.USD);
+  const [desiredCurrency, setDesiredCurrency] = useState<EFiat | ECrypto>(
     ECrypto.ETH
   );
-  const [desiredCurrency, setDesiredCurrency] = useState<EFiat | ECrypto>(
-    EFiat.USD
-  );
+  const [lastUpdated, setLastUpdated] = useState<
+    'baseAmount' | 'desiredAmount'
+  >('baseAmount');
 
   /*
    * API Requests
@@ -47,50 +49,76 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
       method: 'get',
     });
 
-  const updateConversion = async (
+  const updateExchangeRateData = async (
     callApi: (props?: {}) => Promise<void | IExchangeRate>,
     errors: React.ReactNode
   ): Promise<void> => {
     const data = await callApi();
     if (!data) {
-      console.error('Could not get new data at this time.');
+      const message = 'Could not get new data at this time.';
+      console.error(message);
       return;
     }
+    await setExchangeRate(data ? data : null);
     await setErrors(errors);
-    await setDesiredAmount(
-      Conversion.getDesiredAmount(data, parseFloat(baseAmount))
-    );
   };
 
-  const updateData = async () => {
+  const updateExchangeRate = async () => {
     switch (exchange) {
       case EExchange.COINBASE: {
-        await updateConversion(callCoinbaseApi, coinbaseErrors);
+        await updateExchangeRateData(callCoinbaseApi, coinbaseErrors);
         break;
       }
       case EExchange.FTX: {
-        await updateConversion(callFtxApi, ftxErrors);
+        await updateExchangeRateData(callFtxApi, ftxErrors);
         break;
       }
       default: {
-        await updateConversion(callCoinbaseApi, coinbaseErrors);
+        await updateExchangeRateData(callCoinbaseApi, coinbaseErrors);
+        break;
+      }
+    }
+  };
+
+  const updateAmounts = async () => {
+    if (!exchangeRate) return;
+
+    switch (lastUpdated) {
+      case 'baseAmount': {
+        await setDesiredAmount(
+          Conversion.getExchangedAmount({
+            exchangeRate,
+            amount: parseFloat(baseAmount),
+            base: baseCurrency,
+            desired: desiredCurrency,
+          })
+        );
+        break;
+      }
+      case 'desiredAmount': {
+        await setBaseAmount(
+          Conversion.getExchangedAmount({
+            exchangeRate,
+            amount: parseFloat(desiredAmount),
+            base: desiredCurrency,
+            desired: baseCurrency,
+          })
+        );
         break;
       }
     }
   };
 
   /*
-   * Update data whenever exchange/base amount is changed or when timer runs out
+   * Update timer whenever exchange/currencies change or when timer runs out
    */
   useEffect(() => {
-    updateData();
+    updateExchangeRate();
     setTimeLeft(_cooldown);
 
     const timer = setInterval(() => {
       if (timeLeft > 0) {
         setTimeLeft((prev) => {
-          if (timeLeft === 0) updateData();
-
           return prev > 0 ? prev - 1 : _cooldown;
         });
       }
@@ -99,14 +127,26 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [exchange, baseAmount, baseCurrency, desiredCurrency]);
+  }, [exchange, baseCurrency, desiredCurrency]);
 
-  if (timeLeft === 0) updateData();
+  /*
+   * Update data whenver amounts or exchange rates change
+   */
+  useEffect(() => {
+    updateAmounts();
+  }, [lastUpdated, baseAmount, desiredAmount, exchangeRate]);
+
+  if (timeLeft === 0) {
+    updateExchangeRate();
+  }
 
   useEffect(() => {
     // console.log(baseCurrency, baseAmount);
     // console.log(desiredCurrency, desiredAmount);
-  }, [baseCurrency, desiredCurrency]);
+    // console.log('lastUpdated', lastUpdated);
+    // console.log(exchangeRate);
+    // console.log(lastUpdated);
+  }, [lastUpdated, exchangeRate]);
 
   return (
     <div
@@ -129,7 +169,8 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
         desiredCurrency={desiredCurrency}
         setDesiredCurrency={setDesiredCurrency}
         desiredAmount={desiredAmount}
-        setDesiredAmount={setBaseAmount}
+        setDesiredAmount={setDesiredAmount}
+        setLastUpdated={setLastUpdated}
       />
       timeLeft: {timeLeft}
     </div>

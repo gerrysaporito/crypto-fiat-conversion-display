@@ -11,6 +11,9 @@ interface IConversionDisplayInputs {
   setDesiredCurrency: React.Dispatch<React.SetStateAction<EFiat | ECrypto>>;
   desiredAmount: string;
   setDesiredAmount: React.Dispatch<React.SetStateAction<string>>;
+  setLastUpdated: React.Dispatch<
+    React.SetStateAction<'baseAmount' | 'desiredAmount'>
+  >;
 }
 export const ConversionDisplayInputs: React.FC<IConversionDisplayInputs> = ({
   baseCurrency,
@@ -21,6 +24,7 @@ export const ConversionDisplayInputs: React.FC<IConversionDisplayInputs> = ({
   setDesiredCurrency,
   desiredAmount,
   setDesiredAmount,
+  setLastUpdated,
 }) => {
   return (
     <div className="w-full">
@@ -30,13 +34,17 @@ export const ConversionDisplayInputs: React.FC<IConversionDisplayInputs> = ({
         setAmount={setBaseAmount}
         selectedCurrency={baseCurrency}
         setSelectedCurrency={setBaseCurrency}
+        lastUpdated="baseAmount"
+        setLastUpdated={setLastUpdated}
       />
       <Input
-        header="I will recieve"
+        header="I want to buy"
         amount={desiredAmount}
         setAmount={setDesiredAmount}
         selectedCurrency={desiredCurrency}
         setSelectedCurrency={setDesiredCurrency}
+        lastUpdated="desiredAmount"
+        setLastUpdated={setLastUpdated}
       />
     </div>
   );
@@ -51,6 +59,10 @@ interface IInput {
   setAmount: React.Dispatch<React.SetStateAction<string>>;
   selectedCurrency: keyof typeof EFiat | keyof typeof ECrypto;
   setSelectedCurrency: React.Dispatch<React.SetStateAction<EFiat | ECrypto>>;
+  lastUpdated: 'baseAmount' | 'desiredAmount';
+  setLastUpdated: React.Dispatch<
+    React.SetStateAction<'baseAmount' | 'desiredAmount'>
+  >;
 }
 const Input: React.FC<IInput> = ({
   header,
@@ -58,6 +70,8 @@ const Input: React.FC<IInput> = ({
   setAmount,
   selectedCurrency,
   setSelectedCurrency,
+  setLastUpdated,
+  lastUpdated,
 }) => {
   const currencies = Conversion.isFiat(selectedCurrency) ? EFiat : ECrypto;
 
@@ -76,11 +90,25 @@ const Input: React.FC<IInput> = ({
   const onChangeUpdateAmount: React.ChangeEventHandler<HTMLInputElement> = (
     event
   ) => {
-    event.preventDefault();
-    const value = event.target.value;
+    const run = async () => {
+      event.preventDefault();
+      const value = event.target.value;
 
-    if (value.split('.')[1]?.length > 2) return;
-    setAmount(value);
+      if (
+        Conversion.isFiat(selectedCurrency) &&
+        value.split('.')[1]?.length > 2
+      )
+        return;
+      if (
+        Conversion.isCrypto(selectedCurrency) &&
+        value.split('.')[1]?.length > 5
+      )
+        return;
+
+      await setLastUpdated(lastUpdated);
+      await setAmount(value);
+    };
+    run();
   };
 
   /*
