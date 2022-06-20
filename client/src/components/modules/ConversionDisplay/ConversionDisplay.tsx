@@ -4,6 +4,7 @@ import { ECrypto } from '../../../utils/enums/ECrypto';
 import { EExchange } from '../../../utils/enums/EExchange';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
+import { Conversion } from '../../../utils/utility/Conversion';
 
 interface IConversionDisplay {}
 
@@ -14,12 +15,10 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
   const [baseAmount, setBaseAmount] = useState<number>(10);
-  const [baseCurrency, setBaseCurrency] = useState<EFiat | ECrypto>(
-    ECrypto.ETH
-  );
-  const [desiredAmount, setDesiredAmount] = useState<number>(0);
+  const [baseCurrency, setBaseCurrency] = useState<EFiat | ECrypto>(EFiat.USD);
+  const [desiredAmount, setDesiredAmount] = useState<string>('0');
   const [desiredCurrency, setDesiredCurrency] = useState<EFiat | ECrypto>(
-    EFiat.USD
+    ECrypto.ETH
   );
 
   /*
@@ -33,29 +32,34 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
 
   const { doRequest: callFtxApi, errors: ftxErrors } =
     useRequest<IExchangeRate>({
-      url: `/api/v1/coinbase/exchange-rate?base=${baseCurrency}&desired=${desiredCurrency}`,
+      url: `/api/v1/ftx/exchange-rate?base=${baseCurrency}&desired=${desiredCurrency}`,
       method: 'get',
     });
 
-  const updateCoinbaseConversion = async () => {
+  const updateCoinbaseConversion = async (): Promise<void> => {
     const data = await callCoinbaseApi();
-    if (!data) return;
-    console.log(data);
+    if (!data) {
+      console.error('Could not get new data at this time.');
+      return;
+    }
     await setErrors(coinbaseErrors);
+    await setDesiredAmount(Conversion.getDesiredAmount(data, baseAmount));
   };
 
-  const updateFtxConversion = async () => {
+  const updateFtxConversion = async (): Promise<void> => {
     const data = await callFtxApi();
-    if (!data) return;
-    console.log(data);
+    if (!data) {
+      console.error('Could not get new data at this time.');
+      return;
+    }
     await setErrors(ftxErrors);
+    await setDesiredAmount(Conversion.getDesiredAmount(data, baseAmount));
   };
 
   /*
    * Update desired amounts and errors whenever exchange is changed
    */
   useEffect(() => {
-    console.log(exchange);
     switch (exchange) {
       case EExchange.COINBASE: {
         updateCoinbaseConversion();
@@ -70,7 +74,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
         break;
       }
     }
-  }, [exchange]);
+  }, [exchange, baseAmount]);
 
   /*
    * Event Handlers
@@ -89,6 +93,8 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
     } else console.error('Invalid Exchange');
   };
 
+  console.log(baseCurrency, baseAmount);
+  console.log(desiredCurrency, desiredAmount);
   return (
     <div id="CONVERSION_DISPLAY" className="w-full h-full">
       <select onChange={changeExchange}>
