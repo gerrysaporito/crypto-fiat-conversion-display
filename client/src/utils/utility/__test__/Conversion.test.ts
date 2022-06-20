@@ -31,19 +31,20 @@ describe(`Tests Conversion utility classes static functions`, () => {
     // Invalid desired currency
     expect(
       Conversion.getDesiredAmount({ base: '', desired: '', rate: 0.1 }, amount)
-    ).toEqual(-1);
+    ).toEqual('-1');
     expect(
       Conversion.getDesiredAmount(
         { base: EFiat.USD, desired: '', rate: 0.1 },
         amount
       )
-    ).toEqual(-1);
+    ).toEqual('-1');
     expect(
       Conversion.getDesiredAmount(
         { base: ECrypto.BTC, desired: '', rate: 0.1 },
         amount
       )
-    ).toEqual(-1);
+    ).toEqual('-1');
+
     // Valid desired currency
     const fiat2CryptoRate = 0.00005;
     const crypto2FiatRate = 20000;
@@ -59,5 +60,13 @@ describe(`Tests Conversion utility classes static functions`, () => {
         amount
       )
     ).toEqual((amount * fiat2CryptoRate).toFixed(5));
+
+    // Return type is a string
+    expect(
+      typeof Conversion.getDesiredAmount(
+        { base: '', desired: ECrypto.BTC, rate: fiat2CryptoRate },
+        amount
+      )
+    ).toEqual('string');
   });
 });
