@@ -110,7 +110,7 @@ const getConversionData = async (
   const info = {
     base: base.toUpperCase(),
     desired: desired.toUpperCase(),
-    rate: Conversion.isFiat(desired) ? rate : 1 / rate,
+    rate: Conversion.isFiat(base) ? rate : 1 / rate,
   };
 
   return info;

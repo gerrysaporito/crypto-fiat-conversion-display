@@ -84,7 +84,7 @@ const checkValidQueryParams = (
 /*
  * Data conversion request.
  *
- * Calls the coinbase API to get the current prices for for the user.
+ * Calls the Coinbase API to get the current prices for for the user.
  */
 const getConversionData = async (
   base: string,
@@ -92,7 +92,7 @@ const getConversionData = async (
 ): Promise<IExchangeRate> => {
   let market = `${desired}/${base}`;
 
-  if (Conversion.isFiat(base)) market = `${base}/${desired}`;
+  if (Conversion.isFiat(desired)) market = `${base}/${desired}`;
   const endpoint = ENDPOINT + `/markets/${market}/orderbook?depth=1`;
 
   const {
@@ -106,7 +106,7 @@ const getConversionData = async (
   const info = {
     base: base.toUpperCase(),
     desired: desired.toUpperCase(),
-    rate: Conversion.isFiat(base) ? rate : 1 / rate,
+    rate: Conversion.isFiat(desired) ? rate : 1 / rate,
   };
 
   return info;
