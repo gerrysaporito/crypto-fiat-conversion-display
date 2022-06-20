@@ -7,6 +7,7 @@ import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../utils/utility/Conversion';
 import { ConversionDisplayExchanges } from './ConversionDisplayExchanges';
 import { ConversionDisplayInputs } from './ConversionDisplayInputs';
+import { ConversionDisplaySummary } from './ConversionDisplaySummary';
 
 interface IConversionDisplay {
   cooldown?: number; // Seconds
@@ -178,7 +179,14 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
         setDesiredAmount={setDesiredAmount}
         setLastUpdated={setLastUpdated}
       />
-      timeLeft: {timeLeft}
+      <ConversionDisplaySummary
+        baseCurrency={baseCurrency}
+        baseAmount={baseAmount}
+        desiredCurrency={desiredCurrency}
+        desiredAmount={desiredAmount}
+        exchangeRate={exchangeRate}
+        timeLeft={timeLeft}
+      />
     </div>
   );
 };
