@@ -3,7 +3,7 @@ import { ConversionDisplay } from '../components/modules/ConversionDisplay/Conve
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div className="w-full h-full flex justify-center items-center">
       <ConversionDisplay />
     </div>
   );

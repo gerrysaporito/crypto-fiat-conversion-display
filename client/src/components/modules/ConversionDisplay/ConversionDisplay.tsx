@@ -5,6 +5,8 @@ import { EExchange } from '../../../utils/enums/EExchange';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../utils/utility/Conversion';
+import { ConversionDisplayExchanges } from './ConversionDisplayExchanges';
+import { ConversionDisplayInputs } from './ConversionDisplayInputs';
 
 interface IConversionDisplay {
   cooldown?: number; // Seconds
@@ -21,7 +23,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   const [timeLeft, setTimeLeft] = useState<number>(_cooldown);
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
-  const [baseAmount, setBaseAmount] = useState<number>(10);
+  const [baseAmount, setBaseAmount] = useState<string>('10');
   const [desiredAmount, setDesiredAmount] = useState<string>('0');
   const [baseCurrency, setBaseCurrency] = useState<EFiat | ECrypto>(
     ECrypto.ETH
@@ -55,7 +57,9 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
       return;
     }
     await setErrors(errors);
-    await setDesiredAmount(Conversion.getDesiredAmount(data, baseAmount));
+    await setDesiredAmount(
+      Conversion.getDesiredAmount(data, parseFloat(baseAmount))
+    );
   };
 
   const updateData = async () => {
@@ -73,27 +77,6 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
         break;
       }
     }
-  };
-
-  /*
-   * Utility
-   */
-
-  /*
-   * Event Handlers
-   */
-  const changeExchange: React.ChangeEventHandler<HTMLSelectElement> = (
-    event
-  ) => {
-    event.preventDefault();
-    const value = event.target.value;
-    const _exchanges = Object.keys(EExchange);
-
-    // Check if exchange exists
-    if (_exchanges.includes(value)) {
-      const _exchange = _exchanges[_exchanges.indexOf(value)];
-      setExchange(_exchange as EExchange);
-    } else console.error('Invalid Exchange');
   };
 
   /*
@@ -116,19 +99,38 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [exchange, baseAmount]);
+  }, [exchange, baseAmount, baseCurrency, desiredCurrency]);
 
   if (timeLeft === 0) updateData();
 
+  useEffect(() => {
+    // console.log(baseCurrency, baseAmount);
+    // console.log(desiredCurrency, desiredAmount);
+  }, [baseCurrency, desiredCurrency]);
+
   return (
-    <div id="CONVERSION_DISPLAY" className="w-full h-full">
-      <select onChange={changeExchange}>
-        {Object.keys(EExchange).map((key, i) => (
-          <option key={i} value={key}>
-            {key}
-          </option>
-        ))}
-      </select>
+    <div
+      className={[
+        'h-full max-h-[600px] w-full max-w-sm',
+        'rounded-2xl',
+        'px-10 py-10',
+      ].join(' ')}
+      style={{ backgroundColor: 'lightblue' }}
+    >
+      <ConversionDisplayExchanges
+        setExchange={setExchange}
+        selectedExchange={exchange}
+      />
+      <ConversionDisplayInputs
+        baseCurrency={baseCurrency}
+        setBaseCurrency={setBaseCurrency}
+        baseAmount={baseAmount}
+        setBaseAmount={setBaseAmount}
+        desiredCurrency={desiredCurrency}
+        setDesiredCurrency={setDesiredCurrency}
+        desiredAmount={desiredAmount}
+        setDesiredAmount={setBaseAmount}
+      />
       timeLeft: {timeLeft}
     </div>
   );
