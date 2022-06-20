@@ -15,10 +15,12 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
   const [baseAmount, setBaseAmount] = useState<number>(10);
-  const [baseCurrency, setBaseCurrency] = useState<EFiat | ECrypto>(EFiat.USD);
   const [desiredAmount, setDesiredAmount] = useState<string>('0');
-  const [desiredCurrency, setDesiredCurrency] = useState<EFiat | ECrypto>(
+  const [baseCurrency, setBaseCurrency] = useState<EFiat | ECrypto>(
     ECrypto.ETH
+  );
+  const [desiredCurrency, setDesiredCurrency] = useState<EFiat | ECrypto>(
+    EFiat.USD
   );
 
   /*
@@ -36,23 +38,16 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
       method: 'get',
     });
 
-  const updateCoinbaseConversion = async (): Promise<void> => {
-    const data = await callCoinbaseApi();
+  const updateConversion = async (
+    callApi: (props?: {}) => Promise<void | IExchangeRate>,
+    errors: React.ReactNode
+  ): Promise<void> => {
+    const data = await callApi();
     if (!data) {
       console.error('Could not get new data at this time.');
       return;
     }
-    await setErrors(coinbaseErrors);
-    await setDesiredAmount(Conversion.getDesiredAmount(data, baseAmount));
-  };
-
-  const updateFtxConversion = async (): Promise<void> => {
-    const data = await callFtxApi();
-    if (!data) {
-      console.error('Could not get new data at this time.');
-      return;
-    }
-    await setErrors(ftxErrors);
+    await setErrors(errors);
     await setDesiredAmount(Conversion.getDesiredAmount(data, baseAmount));
   };
 
@@ -62,15 +57,15 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
   useEffect(() => {
     switch (exchange) {
       case EExchange.COINBASE: {
-        updateCoinbaseConversion();
+        updateConversion(callCoinbaseApi, coinbaseErrors);
         break;
       }
       case EExchange.FTX: {
-        updateFtxConversion();
+        updateConversion(callFtxApi, ftxErrors);
         break;
       }
       default: {
-        updateCoinbaseConversion();
+        updateConversion(callCoinbaseApi, coinbaseErrors);
         break;
       }
     }
