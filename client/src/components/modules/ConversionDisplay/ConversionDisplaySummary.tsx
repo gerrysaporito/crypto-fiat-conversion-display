@@ -39,15 +39,24 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = ({
           <p>
             You get{' '}
             <span className="font-bold">
-              {desiredAmount} {desiredCurrency}
+              {cleanAmount(desiredAmount)} {desiredCurrency}
             </span>{' '}
             for{' '}
             <span className="font-bold">
-              {baseAmount} {baseCurrency}
+              {cleanAmount(baseAmount)} {baseCurrency}
             </span>
           </p>
         </div>
       </div>
     </div>
   );
+};
+
+const cleanAmount = (amount: string) => {
+  const hasDecimals = amount.split('.')[1]?.replace(/^0+/, '').length > 0;
+  const startsWith0 = amount.split('.')[0]?.replace(/^0+/, '').length === 0;
+
+  return hasDecimals && startsWith0
+    ? '0' + amount.replace(/^0+/, '')
+    : amount.replace(/^0+/, '');
 };

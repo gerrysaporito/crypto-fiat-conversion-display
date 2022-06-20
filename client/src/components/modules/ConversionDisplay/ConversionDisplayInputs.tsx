@@ -92,13 +92,13 @@ const Input: React.FC<IInput> = ({
   ) => {
     const run = async () => {
       event.preventDefault();
-      const value = event.target.value;
+      let value = event.target.value;
       const decimals = value.split('.')[1];
       if (Conversion.isFiat(selectedCurrency) && decimals?.length > 2) return;
       if (Conversion.isCrypto(selectedCurrency) && decimals?.length > 5) return;
 
       await setLastUpdated(lastUpdated);
-      await setAmount(value.trim());
+      await setAmount(value);
     };
     run();
   };
