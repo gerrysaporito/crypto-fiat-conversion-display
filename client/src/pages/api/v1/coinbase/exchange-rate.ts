@@ -1,5 +1,7 @@
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { ECrypto } from '../../../../utils/enums/ECrypto';
+import { EFiat } from '../../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../../utils/utility/Conversion';
 
@@ -93,17 +95,22 @@ const getConversionData = async (
   base: string,
   desired: string
 ): Promise<IExchangeRate> => {
-  const endpoint =
-    ENDPOINT + `/v2/exchange-rates?desired=${desired.toUpperCase()}`;
+  let endpoint = ENDPOINT + `/v2/exchange-rates?desired=${base.toUpperCase()}`;
+  if (Conversion.isCrypto(desired))
+    endpoint = ENDPOINT + `/v2/exchange-rates?desired=${desired.toUpperCase()}`;
 
   const {
     data: { data },
   } = await axios.get(endpoint);
 
+  let rate = parseFloat(data.rates[desired.toUpperCase()]);
+  if (Conversion.isCrypto(base))
+    rate = parseFloat(data.rates[base.toUpperCase()]);
+
   const info = {
     base: base.toUpperCase(),
     desired: desired.toUpperCase(),
-    rate: data.rates[desired.toUpperCase()],
+    rate: Conversion.isFiat(desired) ? rate : 1 / rate,
   };
 
   return info;

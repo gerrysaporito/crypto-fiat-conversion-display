@@ -57,44 +57,82 @@ describe(`'/api/v1/coinbase/get-exchange-rate' API Endpoint`, () => {
     });
     expect(res.statusCode).toBe(400);
     expect(res._getJSONData().message).toEqual(
-      "Base value is not supported: '${invalid}'"
+      `Base value is not supported: '${invalid}'`
     );
   });
 
-  /*
-   * Can't test FTX's unsupported markets without triggering other guards first.
-   */
-  // it('should fail and reject base crypto currency which is not supported by Coinbase', async () => {
-  //   const query = {
-  //     base: 'USD',
-  //     desired: 'BTC',
-  //   };
-  //   let res = await testHandler(exchangeRateHandlers, {
-  //     method: 'GET',
-  //     query: query,
-  //   });
-
-  //   expect(res.statusCode).toBe(400);
-  //   expect(res._getJSONData().message).toEqual(
-  //     `Market cannot be found for: '${query.base}-${query.desired}'`
-  //   );
-  // });
-
-  it('should succeed and return current price for desired currency in base currency provided', async () => {
-    const query = {
-      base: 'BTC',
-      desired: 'USD',
-    };
+  it('should fail and reject base crypto currency which is not supported by Coinbase', async () => {
+    const fiat = 'BTC';
+    const crypto = 'CAD';
     let res = await testHandler(exchangeRateHandlers, {
       method: 'GET',
-      query: query,
+      query: {
+        base: fiat,
+        desired: crypto,
+      },
+    });
+
+    expect(res.statusCode).toBe(400);
+    expect(res._getJSONData().message).toEqual(
+      `Market cannot be found for: '${fiat}-${crypto}'`
+    );
+  });
+
+  it('should succeed and return current price for desired currency in base currency provided', async () => {
+    const fiat = 'BTC';
+    const crypto = 'USD';
+    let res = await testHandler(exchangeRateHandlers, {
+      method: 'GET',
+      query: {
+        base: crypto,
+        desired: fiat,
+      },
     });
     const data = res._getJSONData();
 
     expect(res.statusCode).toBe(200);
-    expect(data.base).toEqual(query.base);
-    expect(data.desired).toEqual(query.desired);
+    expect(data.base).toEqual(crypto);
+    expect(data.desired).toEqual(fiat);
     expect(!isNaN(Number(data.rate))).toBeTruthy();
     expect(data.rate >= 0).toBeTruthy();
+  });
+
+  it('should succeed and ensure that the prices are correct with respect to their crypto/fiat counterparts', async () => {
+    const fiat = 'BTC';
+    const crypto = 'USD';
+    let desireCryptoRes = await testHandler(exchangeRateHandlers, {
+      method: 'GET',
+      query: {
+        base: fiat,
+        desired: crypto,
+      },
+    });
+    let desireFiatRes = await testHandler(exchangeRateHandlers, {
+      method: 'GET',
+      query: {
+        base: crypto,
+        desired: fiat,
+      },
+    });
+    const desireFiatData = desireFiatRes._getJSONData();
+    const desireCryptoData = desireCryptoRes._getJSONData();
+
+    // Successful Requests
+    expect(desireFiatRes.statusCode).toBe(200);
+    expect(desireCryptoRes.statusCode).toBe(200);
+    // Expected Bases
+    expect(desireFiatData.base).toEqual(crypto);
+    expect(desireCryptoData.base).toEqual(fiat);
+    // Expected Desired
+    expect(desireFiatData.desired).toEqual(fiat);
+    expect(desireCryptoData.desired).toEqual(crypto);
+    // Rates are numbers
+    expect(!isNaN(Number(desireFiatData.rate))).toBeTruthy();
+    expect(!isNaN(Number(desireCryptoData.rate))).toBeTruthy();
+    // Rates are greater than 0
+    expect(desireFiatData.rate >= 0).toBeTruthy();
+    expect(desireCryptoData.rate >= 0).toBeTruthy();
+    // Rate are as expected
+    expect(desireFiatData.rate >= desireCryptoData.rate).toBeTruthy();
   });
 });

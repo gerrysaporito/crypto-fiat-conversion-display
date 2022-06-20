@@ -90,10 +90,9 @@ const getConversionData = async (
   base: string,
   desired: string
 ): Promise<IExchangeRate> => {
-  const isBaseFiat = Conversion.isFiat(base);
   let market = `${desired}/${base}`;
 
-  if (isBaseFiat) market = `${base}/${desired}`;
+  if (Conversion.isFiat(base)) market = `${base}/${desired}`;
   const endpoint = ENDPOINT + `/markets/${market}/orderbook?depth=1`;
 
   const {
@@ -102,13 +101,12 @@ const getConversionData = async (
     },
   } = await axios.get(endpoint);
 
-  let rate = (bids[0][0] + asks[0][0]) / 2; // Average between highest bid and lowest ask
-  if (isBaseFiat) rate = (bids[0][1] + asks[0][1]) / 2;
+  const rate = (bids[0][0] + asks[0][0]) / 2; // Average between highest bid and lowest ask
 
   const info = {
     base: base.toUpperCase(),
     desired: desired.toUpperCase(),
-    rate: rate,
+    rate: Conversion.isFiat(desired) ? rate : 1 / rate,
   };
 
   return info;
