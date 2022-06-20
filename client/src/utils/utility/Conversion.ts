@@ -28,10 +28,11 @@ export class Conversion {
   }
 
   static getDesiredAmount(exchangeRate: IExchangeRate, amount: number) {
-    console.log(exchangeRate);
     if (this.isFiat(exchangeRate.desired))
       return (amount * exchangeRate.rate).toFixed(2);
+    else if (this.isCrypto(exchangeRate.desired))
+      return (amount * exchangeRate.rate).toFixed(5);
 
-    return (amount * exchangeRate.rate).toFixed(10);
+    return -1;
   }
 }
