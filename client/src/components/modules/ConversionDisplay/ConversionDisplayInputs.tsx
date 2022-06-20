@@ -74,7 +74,7 @@ const Input: React.FC<IInput> = ({
   lastUpdated,
 }) => {
   const currencies = Conversion.isFiat(selectedCurrency) ? EFiat : ECrypto;
-
+  const placeholderAmount = Conversion.isFiat(selectedCurrency) ? '100' : '0.1';
   /*
    * React element for each option within the select.
    */
@@ -93,20 +93,12 @@ const Input: React.FC<IInput> = ({
     const run = async () => {
       event.preventDefault();
       const value = event.target.value;
-
-      if (
-        Conversion.isFiat(selectedCurrency) &&
-        value.split('.')[1]?.length > 2
-      )
-        return;
-      if (
-        Conversion.isCrypto(selectedCurrency) &&
-        value.split('.')[1]?.length > 5
-      )
-        return;
+      const decimals = value.split('.')[1];
+      if (Conversion.isFiat(selectedCurrency) && decimals?.length > 2) return;
+      if (Conversion.isCrypto(selectedCurrency) && decimals?.length > 5) return;
 
       await setLastUpdated(lastUpdated);
-      await setAmount(value);
+      await setAmount(value.trim());
     };
     run();
   };
@@ -117,16 +109,26 @@ const Input: React.FC<IInput> = ({
   const onChangeUpdateCurrency: React.ChangeEventHandler<HTMLSelectElement> = (
     event
   ) => {
-    event.preventDefault();
-    const value = event.target.value as EFiat | ECrypto;
-    setSelectedCurrency(value);
+    const run = async () => {
+      event.preventDefault();
+      const value = event.target.value as EFiat | ECrypto;
+
+      await setLastUpdated(lastUpdated);
+      await setSelectedCurrency(value);
+    };
+    run();
   };
 
   return (
     <div className="w-full h-12">
       <p>{header}</p>
       <div>
-        <input type="number" onChange={onChangeUpdateAmount} value={amount} />
+        <input
+          type="number"
+          onChange={onChangeUpdateAmount}
+          value={amount}
+          placeholder={placeholderAmount}
+        />
         <select onChange={onChangeUpdateCurrency} value={selectedCurrency}>
           {options}
         </select>

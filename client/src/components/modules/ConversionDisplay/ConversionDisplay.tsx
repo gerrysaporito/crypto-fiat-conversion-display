@@ -63,6 +63,9 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     await setErrors(errors);
   };
 
+  /*
+   * Master function to update exchange rates (based on current state variables)
+   */
   const updateExchangeRate = async () => {
     switch (exchange) {
       case EExchange.COINBASE: {
@@ -80,6 +83,9 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     }
   };
 
+  /*
+   * Master function to update amounts displayed on screen (based on current state variables)
+   */
   const updateAmounts = async () => {
     if (!exchangeRate) return;
 
