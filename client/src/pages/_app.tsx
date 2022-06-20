@@ -1,5 +1,4 @@
-import '../styles/globals.css';
-import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
+import '../styles/globals.scss';
 import { AppProps } from 'next/app';
 import React from 'react';
 import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';

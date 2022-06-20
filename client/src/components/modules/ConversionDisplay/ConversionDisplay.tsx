@@ -5,6 +5,9 @@ import { EExchange } from '../../../utils/enums/EExchange';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../utils/utility/Conversion';
+import { ConversionDisplayExchanges } from './ConversionDisplayExchanges';
+import { ConversionDisplayInputs } from './ConversionDisplayInputs';
+import { ConversionDisplaySummary } from './ConversionDisplaySummary';
 
 interface IConversionDisplay {
   cooldown?: number; // Seconds
@@ -21,14 +24,16 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   const [timeLeft, setTimeLeft] = useState<number>(_cooldown);
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
-  const [baseAmount, setBaseAmount] = useState<number>(10);
+  const [exchangeRate, setExchangeRate] = useState<IExchangeRate | null>(null);
+  const [baseAmount, setBaseAmount] = useState<string>('10');
   const [desiredAmount, setDesiredAmount] = useState<string>('0');
-  const [baseCurrency, setBaseCurrency] = useState<EFiat | ECrypto>(
+  const [baseCurrency, setBaseCurrency] = useState<EFiat | ECrypto>(EFiat.USD);
+  const [desiredCurrency, setDesiredCurrency] = useState<EFiat | ECrypto>(
     ECrypto.ETH
   );
-  const [desiredCurrency, setDesiredCurrency] = useState<EFiat | ECrypto>(
-    EFiat.USD
-  );
+  const [lastUpdated, setLastUpdated] = useState<
+    'baseAmount' | 'desiredAmount'
+  >('baseAmount');
 
   /*
    * API Requests
@@ -45,69 +50,82 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
       method: 'get',
     });
 
-  const updateConversion = async (
+  const updateExchangeRateData = async (
     callApi: (props?: {}) => Promise<void | IExchangeRate>,
     errors: React.ReactNode
   ): Promise<void> => {
     const data = await callApi();
     if (!data) {
-      console.error('Could not get new data at this time.');
+      const message = 'Could not get new data at this time.';
+      console.error(message);
       return;
     }
+    await setExchangeRate(data ? data : null);
     await setErrors(errors);
-    await setDesiredAmount(Conversion.getDesiredAmount(data, baseAmount));
   };
 
-  const updateData = async () => {
+  /*
+   * Master function to update exchange rates (based on current state variables)
+   */
+  const updateExchangeRate = async () => {
     switch (exchange) {
       case EExchange.COINBASE: {
-        await updateConversion(callCoinbaseApi, coinbaseErrors);
+        await updateExchangeRateData(callCoinbaseApi, coinbaseErrors);
         break;
       }
       case EExchange.FTX: {
-        await updateConversion(callFtxApi, ftxErrors);
+        await updateExchangeRateData(callFtxApi, ftxErrors);
         break;
       }
       default: {
-        await updateConversion(callCoinbaseApi, coinbaseErrors);
+        await updateExchangeRateData(callCoinbaseApi, coinbaseErrors);
         break;
       }
     }
   };
 
   /*
-   * Utility
+   * Master function to update amounts displayed on screen (based on current state variables)
    */
+  const updateAmounts = async () => {
+    if (!exchangeRate) return;
 
-  /*
-   * Event Handlers
-   */
-  const changeExchange: React.ChangeEventHandler<HTMLSelectElement> = (
-    event
-  ) => {
-    event.preventDefault();
-    const value = event.target.value;
-    const _exchanges = Object.keys(EExchange);
-
-    // Check if exchange exists
-    if (_exchanges.includes(value)) {
-      const _exchange = _exchanges[_exchanges.indexOf(value)];
-      setExchange(_exchange as EExchange);
-    } else console.error('Invalid Exchange');
+    switch (lastUpdated) {
+      case 'baseAmount': {
+        await setDesiredAmount(
+          Conversion.getExchangedAmount({
+            exchangeRate,
+            amount: parseFloat(baseAmount),
+            base: baseCurrency,
+            desired: desiredCurrency,
+          })
+        );
+        break;
+      }
+      case 'desiredAmount': {
+        await setBaseAmount(
+          Conversion.getExchangedAmount({
+            exchangeRate,
+            amount: parseFloat(desiredAmount),
+            base: desiredCurrency,
+            desired: baseCurrency,
+          })
+        );
+        break;
+      }
+    }
   };
 
   /*
-   * Update data whenever exchange/base amount is changed or when timer runs out
+   * Update timer whenever exchange/currencies change or when timer runs out
    */
   useEffect(() => {
-    updateData();
+    updateExchangeRate();
     setTimeLeft(_cooldown);
 
     const timer = setInterval(() => {
       if (timeLeft > 0) {
         setTimeLeft((prev) => {
-          if (timeLeft === 0) updateData();
-
           return prev > 0 ? prev - 1 : _cooldown;
         });
       }
@@ -116,20 +134,59 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [exchange, baseAmount]);
+  }, [exchange, baseCurrency, desiredCurrency]);
 
-  if (timeLeft === 0) updateData();
+  /*
+   * Update data whenver amounts or exchange rates change
+   */
+  useEffect(() => {
+    updateAmounts();
+  }, [lastUpdated, baseAmount, desiredAmount, exchangeRate]);
+
+  if (timeLeft === 0) {
+    updateExchangeRate();
+  }
+
+  useEffect(() => {
+    // console.log(baseCurrency, baseAmount);
+    // console.log(desiredCurrency, desiredAmount);
+    // console.log('lastUpdated', lastUpdated);
+    // console.log(exchangeRate);
+    // console.log(lastUpdated);
+  }, [lastUpdated, exchangeRate]);
 
   return (
-    <div id="CONVERSION_DISPLAY" className="w-full h-full">
-      <select onChange={changeExchange}>
-        {Object.keys(EExchange).map((key, i) => (
-          <option key={i} value={key}>
-            {key}
-          </option>
-        ))}
-      </select>
-      timeLeft: {timeLeft}
+    <div
+      className={[
+        'h-full max-h-[600px] w-full max-w-sm',
+        'rounded-2xl',
+        'px-10 py-10',
+      ].join(' ')}
+      style={{ backgroundColor: 'lightblue' }}
+    >
+      <ConversionDisplayExchanges
+        setExchange={setExchange}
+        selectedExchange={exchange}
+      />
+      <ConversionDisplayInputs
+        baseCurrency={baseCurrency}
+        setBaseCurrency={setBaseCurrency}
+        baseAmount={baseAmount}
+        setBaseAmount={setBaseAmount}
+        desiredCurrency={desiredCurrency}
+        setDesiredCurrency={setDesiredCurrency}
+        desiredAmount={desiredAmount}
+        setDesiredAmount={setDesiredAmount}
+        setLastUpdated={setLastUpdated}
+      />
+      <ConversionDisplaySummary
+        baseCurrency={baseCurrency}
+        baseAmount={baseAmount}
+        desiredCurrency={desiredCurrency}
+        desiredAmount={desiredAmount}
+        exchangeRate={exchangeRate}
+        timeLeft={timeLeft}
+      />
     </div>
   );
 };
