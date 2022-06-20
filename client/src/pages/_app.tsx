@@ -8,7 +8,7 @@ import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';
 const { toast, ToastContainer } = createStandaloneToast();
 export const standaloneToast = toast;
 
-export default ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider>
       <Component {...pageProps} />
@@ -16,3 +16,5 @@ export default ({ Component, pageProps }: AppProps) => {
     </ChakraProvider>
   );
 };
+
+export default App;

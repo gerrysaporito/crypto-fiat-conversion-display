@@ -4,20 +4,28 @@ import { ECrypto } from '../../../utils/enums/ECrypto';
 import { EExchange } from '../../../utils/enums/EExchange';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
+import { Conversion } from '../../../utils/utility/Conversion';
 
-interface IConversionDisplay {}
+interface IConversionDisplay {
+  cooldown?: number; // Seconds
+}
 
-export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
+export const ConversionDisplay: React.FC<IConversionDisplay> = ({
+  cooldown,
+}) => {
+  const _cooldown = cooldown || 20;
+
   /*
    * State Variables
    */
+  const [timeLeft, setTimeLeft] = useState<number>(_cooldown);
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
   const [baseAmount, setBaseAmount] = useState<number>(10);
+  const [desiredAmount, setDesiredAmount] = useState<string>('0');
   const [baseCurrency, setBaseCurrency] = useState<EFiat | ECrypto>(
     ECrypto.ETH
   );
-  const [desiredAmount, setDesiredAmount] = useState<number>(0);
   const [desiredCurrency, setDesiredCurrency] = useState<EFiat | ECrypto>(
     EFiat.USD
   );
@@ -33,44 +41,43 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
 
   const { doRequest: callFtxApi, errors: ftxErrors } =
     useRequest<IExchangeRate>({
-      url: `/api/v1/coinbase/exchange-rate?base=${baseCurrency}&desired=${desiredCurrency}`,
+      url: `/api/v1/ftx/exchange-rate?base=${baseCurrency}&desired=${desiredCurrency}`,
       method: 'get',
     });
 
-  const updateCoinbaseConversion = async () => {
-    const data = await callCoinbaseApi();
-    if (!data) return;
-    console.log(data);
-    await setErrors(coinbaseErrors);
+  const updateConversion = async (
+    callApi: (props?: {}) => Promise<void | IExchangeRate>,
+    errors: React.ReactNode
+  ): Promise<void> => {
+    const data = await callApi();
+    if (!data) {
+      console.error('Could not get new data at this time.');
+      return;
+    }
+    await setErrors(errors);
+    await setDesiredAmount(Conversion.getDesiredAmount(data, baseAmount));
   };
 
-  const updateFtxConversion = async () => {
-    const data = await callFtxApi();
-    if (!data) return;
-    console.log(data);
-    await setErrors(ftxErrors);
-  };
-
-  /*
-   * Update desired amounts and errors whenever exchange is changed
-   */
-  useEffect(() => {
-    console.log(exchange);
+  const updateData = async () => {
     switch (exchange) {
       case EExchange.COINBASE: {
-        updateCoinbaseConversion();
+        await updateConversion(callCoinbaseApi, coinbaseErrors);
         break;
       }
       case EExchange.FTX: {
-        updateFtxConversion();
+        await updateConversion(callFtxApi, ftxErrors);
         break;
       }
       default: {
-        updateCoinbaseConversion();
+        await updateConversion(callCoinbaseApi, coinbaseErrors);
         break;
       }
     }
-  }, [exchange]);
+  };
+
+  /*
+   * Utility
+   */
 
   /*
    * Event Handlers
@@ -89,6 +96,30 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
     } else console.error('Invalid Exchange');
   };
 
+  /*
+   * Update data whenever exchange/base amount is changed or when timer runs out
+   */
+  useEffect(() => {
+    updateData();
+    setTimeLeft(_cooldown);
+
+    const timer = setInterval(() => {
+      if (timeLeft > 0) {
+        setTimeLeft((prev) => {
+          if (timeLeft === 0) updateData();
+
+          return prev > 0 ? prev - 1 : _cooldown;
+        });
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [exchange, baseAmount]);
+
+  if (timeLeft === 0) updateData();
+
   return (
     <div id="CONVERSION_DISPLAY" className="w-full h-full">
       <select onChange={changeExchange}>
@@ -98,6 +129,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
           </option>
         ))}
       </select>
+      timeLeft: {timeLeft}
     </div>
   );
 };
