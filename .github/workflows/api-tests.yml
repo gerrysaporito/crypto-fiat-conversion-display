@@ -12,11 +12,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Enter client directory
-        run: cd ./client
-
       - name: Install npm packages
-        run: npm install
+        run: cd ./client && npm install
 
       - name: Check react build
-        run: npm run test
+        run: cd ./client && npm run test
