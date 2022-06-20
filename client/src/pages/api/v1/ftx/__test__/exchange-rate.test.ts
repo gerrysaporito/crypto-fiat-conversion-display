@@ -98,8 +98,8 @@ describe(`'/api/v1/coinbase/get-exchange-rate' API Endpoint`, () => {
   });
 
   it('should succeed and ensure that the prices are correct with respect to their crypto/fiat counterparts', async () => {
-    const fiat = 'BTC';
-    const crypto = 'USD';
+    const fiat = 'USD';
+    const crypto = 'BTC';
     let desireCryptoRes = await testHandler(exchangeRateHandlers, {
       method: 'GET',
       query: {
