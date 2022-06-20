@@ -106,9 +106,14 @@ const getConversionData = async (
     data: { data },
   } = await axios.get(endpoint);
 
-  let rate = parseFloat(data.rates[desired.toUpperCase()]);
+  // Rates are based in USD so they must be converted from USD to native currency
+  let rate =
+    parseFloat(data.rates[desired.toUpperCase()]) /
+    parseFloat(data.rates[base.toUpperCase()]);
   if (Conversion.isCrypto(base))
-    rate = parseFloat(data.rates[base.toUpperCase()]);
+    rate = rate =
+      parseFloat(data.rates[base.toUpperCase()]) /
+      parseFloat(data.rates[desired.toUpperCase()]);
 
   const info = {
     base: base.toUpperCase(),
