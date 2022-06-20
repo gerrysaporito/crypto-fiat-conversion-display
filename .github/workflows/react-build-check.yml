@@ -1,4 +1,4 @@
-name: React Build Check
+name: Client Build Check
 
 on:
   pull_request:
