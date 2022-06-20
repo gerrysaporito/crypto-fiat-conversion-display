@@ -27,11 +27,39 @@ export class Conversion {
     return symbols.has(currency.toLowerCase());
   }
 
-  static getDesiredAmount(exchangeRate: IExchangeRate, amount: number): string {
-    if (this.isFiat(exchangeRate.desired))
-      return (amount * exchangeRate.rate).toFixed(2);
-    else if (this.isCrypto(exchangeRate.desired))
-      return (amount * exchangeRate.rate).toFixed(5);
+  static getExchangedAmount({
+    exchangeRate,
+    amount,
+    base,
+    desired,
+  }: {
+    exchangeRate: IExchangeRate;
+    amount: number;
+    base: EFiat | ECrypto;
+    desired: EFiat | ECrypto;
+  }): string {
+    let rate = exchangeRate.rate;
+
+    // Ensure all currencies are present
+    if (
+      !!!base ||
+      !!!exchangeRate.base ||
+      !!!desired ||
+      !!!exchangeRate.desired
+    )
+      return (-1).toString();
+
+    // Check if rate aligns with the conversion direction between currencies
+    const sameFiatBase =
+      this.isFiat(base || '') && this.isFiat(exchangeRate.base || '');
+    const sameCryptoBase =
+      this.isCrypto(base || '') && this.isCrypto(exchangeRate.base || '');
+
+    if (!sameFiatBase && !sameCryptoBase) rate = 1 / exchangeRate.rate;
+
+    // Return valid amount with appropriate decimal count
+    if (this.isFiat(desired)) return (amount * rate).toFixed(2);
+    else if (this.isCrypto(desired)) return (amount * rate).toFixed(5);
 
     return (-1).toString();
   }

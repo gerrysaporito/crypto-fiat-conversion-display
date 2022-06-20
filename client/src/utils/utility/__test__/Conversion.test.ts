@@ -26,47 +26,79 @@ describe(`Tests Conversion utility classes static functions`, () => {
     expect(Conversion.isCrypto('')).toBeFalsy();
   });
 
-  it('tests getDesiredAmount edge cases', async () => {
+  it('tests getExchangedAmount edge cases', async () => {
     const amount = 100;
+    const crypto = ECrypto.BTC;
+    const fiat = EFiat.USD;
+    const crypto2FiatRate = 20000;
     // Invalid desired currency
     expect(
-      Conversion.getDesiredAmount({ base: '', desired: '', rate: 0.1 }, amount)
+      Conversion.getExchangedAmount({
+        exchangeRate: { base: '', desired: '', rate: crypto2FiatRate },
+        amount,
+        base: fiat,
+        desired: crypto,
+      })
     ).toEqual('-1');
     expect(
-      Conversion.getDesiredAmount(
-        { base: EFiat.USD, desired: '', rate: 0.1 },
-        amount
-      )
+      Conversion.getExchangedAmount({
+        exchangeRate: { base: fiat, desired: '', rate: crypto2FiatRate },
+        amount,
+        base: fiat,
+        desired: crypto,
+      })
     ).toEqual('-1');
     expect(
-      Conversion.getDesiredAmount(
-        { base: ECrypto.BTC, desired: '', rate: 0.1 },
-        amount
-      )
+      Conversion.getExchangedAmount({
+        exchangeRate: { base: crypto, desired: '', rate: crypto2FiatRate },
+        amount,
+        base: crypto,
+        desired: fiat,
+      })
+    ).toEqual('-1');
+    expect(
+      Conversion.getExchangedAmount({
+        exchangeRate: { base: fiat, desired: crypto, rate: crypto2FiatRate },
+        amount,
+        base: null as unknown as ECrypto,
+        desired: crypto,
+      })
+    ).toEqual('-1');
+    expect(
+      Conversion.getExchangedAmount({
+        exchangeRate: { base: crypto, desired: fiat, rate: crypto2FiatRate },
+        amount,
+        base: crypto,
+        desired: undefined as unknown as ECrypto,
+      })
     ).toEqual('-1');
 
-    // Valid desired currency
-    const fiat2CryptoRate = 0.00005;
-    const crypto2FiatRate = 20000;
+    // Valid exchange directions
     expect(
-      Conversion.getDesiredAmount(
-        { base: '', desired: EFiat.USD, rate: crypto2FiatRate },
-        amount
-      )
+      Conversion.getExchangedAmount({
+        exchangeRate: { base: crypto, desired: fiat, rate: crypto2FiatRate },
+        amount,
+        base: crypto,
+        desired: fiat,
+      })
     ).toEqual((amount * crypto2FiatRate).toFixed(2));
     expect(
-      Conversion.getDesiredAmount(
-        { base: '', desired: ECrypto.BTC, rate: fiat2CryptoRate },
-        amount
-      )
-    ).toEqual((amount * fiat2CryptoRate).toFixed(5));
+      Conversion.getExchangedAmount({
+        exchangeRate: { base: crypto, desired: fiat, rate: crypto2FiatRate },
+        amount,
+        base: fiat,
+        desired: crypto,
+      })
+    ).toEqual(((amount * 1) / crypto2FiatRate).toFixed(5));
 
     // Return type is a string
     expect(
-      typeof Conversion.getDesiredAmount(
-        { base: '', desired: ECrypto.BTC, rate: fiat2CryptoRate },
-        amount
-      )
+      typeof Conversion.getExchangedAmount({
+        exchangeRate: { base: crypto, desired: fiat, rate: crypto2FiatRate },
+        amount,
+        base: crypto,
+        desired: fiat,
+      })
     ).toEqual('string');
   });
 });
