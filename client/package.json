@@ -21,7 +21,6 @@
     "sass": "^1.52.3"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
     "@types/jest": "^28.1.2",
     "@types/node": "18.0.0",
     "@types/react": "18.0.14",
