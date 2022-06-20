@@ -12,7 +12,10 @@ const ENDPOINT = `https://api.coinbase.com`;
  * @Param: base - The owned currency.
  * @Param: desired - The desired currency.
  */
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const exchangeRateHandlers = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   const { base, desired } = req.query;
   try {
     checkValidQueryParams(base, desired);
@@ -115,3 +118,5 @@ const getConversionData = async (
 
   return info;
 };
+
+export default exchangeRateHandlers;

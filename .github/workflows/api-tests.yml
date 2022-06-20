@@ -15,5 +15,5 @@ jobs:
       - name: Install npm packages
         run: cd ./client && npm install
 
-      - name: Check react build
+      - name: Run tests
         run: cd ./client && npm run test

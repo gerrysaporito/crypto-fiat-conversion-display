@@ -69,8 +69,15 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
         break;
       }
     }
-  }, [exchange, baseAmount]);
-
+  }, [
+    exchange,
+    baseAmount,
+    coinbaseErrors,
+    ftxErrors,
+    callCoinbaseApi,
+    callFtxApi,
+    updateConversion,
+  ]);
   /*
    * Event Handlers
    */
