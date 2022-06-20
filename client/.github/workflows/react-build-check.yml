@@ -1,0 +1,22 @@
+name: React Build Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Enter client directory
+        run: cd client
+
+      - name: Install npm packages
+        run: npm install
+
+      - name: Check react build
+        run: npm run build
