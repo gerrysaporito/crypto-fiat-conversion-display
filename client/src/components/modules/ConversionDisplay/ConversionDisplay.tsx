@@ -6,12 +6,19 @@ import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../utils/utility/Conversion';
 
-interface IConversionDisplay {}
+interface IConversionDisplay {
+  cooldown?: number; // Seconds
+}
 
-export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
+export const ConversionDisplay: React.FC<IConversionDisplay> = ({
+  cooldown,
+}) => {
+  const _cooldown = cooldown || 20;
+
   /*
    * State Variables
    */
+  const [timeLeft, setTimeLeft] = useState<number>(_cooldown);
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
   const [baseAmount, setBaseAmount] = useState<number>(10);
@@ -51,33 +58,27 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
     await setDesiredAmount(Conversion.getDesiredAmount(data, baseAmount));
   };
 
-  /*
-   * Update desired amounts and errors whenever exchange is changed
-   */
-  useEffect(() => {
+  const updateData = async () => {
     switch (exchange) {
       case EExchange.COINBASE: {
-        updateConversion(callCoinbaseApi, coinbaseErrors);
+        await updateConversion(callCoinbaseApi, coinbaseErrors);
         break;
       }
       case EExchange.FTX: {
-        updateConversion(callFtxApi, ftxErrors);
+        await updateConversion(callFtxApi, ftxErrors);
         break;
       }
       default: {
-        updateConversion(callCoinbaseApi, coinbaseErrors);
+        await updateConversion(callCoinbaseApi, coinbaseErrors);
         break;
       }
     }
-  }, [
-    exchange,
-    baseAmount,
-    coinbaseErrors,
-    ftxErrors,
-    callCoinbaseApi,
-    callFtxApi,
-    updateConversion,
-  ]);
+  };
+
+  /*
+   * Utility
+   */
+
   /*
    * Event Handlers
    */
@@ -95,8 +96,30 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
     } else console.error('Invalid Exchange');
   };
 
-  console.log(baseCurrency, baseAmount);
-  console.log(desiredCurrency, desiredAmount);
+  /*
+   * Update data whenever exchange/base amount is changed or when timer runs out
+   */
+  useEffect(() => {
+    updateData();
+    setTimeLeft(_cooldown);
+
+    const timer = setInterval(() => {
+      if (timeLeft > 0) {
+        setTimeLeft((prev) => {
+          if (timeLeft === 0) updateData();
+
+          return prev > 0 ? prev - 1 : _cooldown;
+        });
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [exchange, baseAmount]);
+
+  if (timeLeft === 0) updateData();
+
   return (
     <div id="CONVERSION_DISPLAY" className="w-full h-full">
       <select onChange={changeExchange}>
@@ -106,6 +129,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = () => {
           </option>
         ))}
       </select>
+      timeLeft: {timeLeft}
     </div>
   );
 };
