@@ -90,18 +90,15 @@ const Input: React.FC<IInput> = ({
   const onChangeUpdateAmount: React.ChangeEventHandler<HTMLInputElement> = (
     event
   ) => {
-    const run = async () => {
-      event.preventDefault();
+    event.preventDefault();
+    event.persist();
+    let value = event.target.value;
+    const decimals = value.split('.')[1];
+    if (Conversion.isFiat(selectedCurrency) && decimals?.length > 2) return;
+    if (Conversion.isCrypto(selectedCurrency) && decimals?.length > 5) return;
 
-      let value = event.target.value;
-      const decimals = value.split('.')[1];
-      if (Conversion.isFiat(selectedCurrency) && decimals?.length > 2) return;
-      if (Conversion.isCrypto(selectedCurrency) && decimals?.length > 5) return;
-
-      await setLastUpdated(lastUpdated);
-      await setAmount(value);
-    };
-    run();
+    setLastUpdated(lastUpdated);
+    setAmount(value);
   };
 
   /*
@@ -110,14 +107,12 @@ const Input: React.FC<IInput> = ({
   const onChangeUpdateCurrency: React.ChangeEventHandler<HTMLSelectElement> = (
     event
   ) => {
-    const run = async () => {
-      event.preventDefault();
-      const value = event.target.value as EFiat | ECrypto;
+    event.preventDefault();
+    event.persist();
+    const value = event.target.value as EFiat | ECrypto;
 
-      await setLastUpdated(lastUpdated);
-      await setSelectedCurrency(value);
-    };
-    run();
+    setLastUpdated(lastUpdated);
+    setSelectedCurrency(value);
   };
 
   return (
@@ -127,7 +122,7 @@ const Input: React.FC<IInput> = ({
         <input
           type="number"
           onChange={onChangeUpdateAmount}
-          defaultValue={amount}
+          value={amount}
           placeholder={placeholderAmount}
         />
         <select onChange={onChangeUpdateCurrency} value={selectedCurrency}>

@@ -56,7 +56,18 @@ const cleanAmount = (amount: string) => {
   const hasDecimals = amount.split('.')[1]?.replace(/^0+/, '').length > 0;
   const startsWith0 = amount.split('.')[0]?.replace(/^0+/, '').length === 0;
 
-  return hasDecimals && startsWith0
-    ? '0' + amount.replace(/^0+/, '')
-    : amount.replace(/^0+/, '');
+  const res =
+    hasDecimals && startsWith0
+      ? '0' + amount.replace(/^0+/, '')
+      : amount.replace(/^0+/, '');
+
+  const whole = res.split('.')[0];
+  const decimals = res.split('.')[1];
+
+  if (res.length > 6) {
+    // return decimals?.length > 5
+    //   ? [whole, decimals.slice(0, 6 - whole.length)].join('.')
+    //   : whole;
+  }
+  return res;
 };
