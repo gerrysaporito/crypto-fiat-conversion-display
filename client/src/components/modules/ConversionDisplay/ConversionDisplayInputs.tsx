@@ -92,6 +92,7 @@ const Input: React.FC<IInput> = ({
   ) => {
     const run = async () => {
       event.preventDefault();
+
       let value = event.target.value;
       const decimals = value.split('.')[1];
       if (Conversion.isFiat(selectedCurrency) && decimals?.length > 2) return;
@@ -126,7 +127,7 @@ const Input: React.FC<IInput> = ({
         <input
           type="number"
           onChange={onChangeUpdateAmount}
-          value={amount}
+          defaultValue={amount}
           placeholder={placeholderAmount}
         />
         <select onChange={onChangeUpdateCurrency} value={selectedCurrency}>

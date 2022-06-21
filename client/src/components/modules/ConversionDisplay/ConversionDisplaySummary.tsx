@@ -38,11 +38,11 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = ({
         <div>
           <p>
             You get{' '}
-            <span className="font-bold">
+            <span className="font-bold tabular-nums">
               {cleanAmount(desiredAmount)} {desiredCurrency}
             </span>{' '}
             for{' '}
-            <span className="font-bold">
+            <span className="font-bold tabular-nums">
               {cleanAmount(baseAmount)} {baseCurrency}
             </span>
           </p>
