@@ -157,17 +157,14 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
 
   return (
     <div
-      className={['relative w-full max-w-sm', 'rounded-2xl', 'text-sm'].join(
-        ' '
-      )}
+      className={[
+        'relative w-full max-w-sm',
+        'rounded-2xl overflow-hidden',
+        'text-sm',
+      ].join(' ')}
       style={{ backgroundColor: 'lightblue' }}
     >
-      <div
-        className={[
-          'relative mx-10 pb-10 mt-10',
-          'grid grid-cols-1 gap-5',
-        ].join(' ')}
-      >
+      <div className={['mx-10 my-10', 'grid grid-cols-1 gap-5'].join(' ')}>
         <ConversionDisplayExchanges
           setExchange={setExchange}
           selectedExchange={exchange}

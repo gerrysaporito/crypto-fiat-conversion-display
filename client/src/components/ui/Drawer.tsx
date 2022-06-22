@@ -58,9 +58,8 @@ export const Drawer: React.FC<IDrawer> = ({
     <Expand in={showDrawer}>
       <div
         className={[
-          'absolute w-full h-full bottom-0 right-0',
-          'pb-10',
-          `${showDrawer && 'z-10'}`,
+          'w-full h-full absolute bottom-0 right-0',
+          'rounded-2xl px-10 py-10',
         ].join(' ')}
         style={{ backgroundColor: 'lightblue' }}
       >

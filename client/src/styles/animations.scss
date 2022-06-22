@@ -1,27 +1,26 @@
 .expand {
   &-vertical {
     &-enter {
-      overflow-y: hidden;
       height: 0;
-      opacity: 1;
       padding-top: 0;
+      padding-bottom: 0;
     }
     &-enter-active {
+      padding-top: 40px;
+      padding-bottom: 40px;
       height: 100%;
-      opacity: 1;
-      transition: padding-top 0.5s ease-in-out, height 1s ease-in-out,
-        opacity 1s ease-in-out;
+      transition: padding-top 0.7s ease-in-out, padding-bottom 0.5s ease-in-out,
+        height 0.5s ease-in-out;
     }
     &-exit {
-      overflow-y: hidden;
+      padding-top: 40px;
+      padding-bottom: 40px;
       height: 100%;
-      opacity: 1;
     }
     &-exit-active {
       padding-bottom: 0;
       height: 0;
-      opacity: 1;
-      transition: height 1s ease-in-out, opacity 1s ease-in-out;
+      transition: padding-bottom 0.5s ease-in-out, height 0.5s ease-in;
     }
   }
 }
