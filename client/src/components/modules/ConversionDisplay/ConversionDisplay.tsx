@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useRequest from '../../../hooks/useRequest';
+import { useRequest } from '../../../hooks/useRequest';
 import { ECrypto } from '../../../utils/enums/ECrypto';
 import { EExchange } from '../../../utils/enums/EExchange';
 import { EFiat } from '../../../utils/enums/EFiat';
@@ -158,9 +158,8 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   return (
     <div
       className={[
-        'w-full max-w-sm',
-        'rounded-2xl',
-        'px-10 py-10',
+        'relative w-full max-w-sm',
+        'rounded-2xl px-10 py-10',
         'text-sm',
         'grid grid-cols-1 gap-5',
       ].join(' ')}
