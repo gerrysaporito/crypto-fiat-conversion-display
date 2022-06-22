@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface IDrawer {
   title: string;
@@ -18,9 +18,11 @@ export const Drawer: React.FC<IDrawer> = ({
   setState,
 }) => {
   if (!showDrawer) return <></>;
+  const [search, setSearch] = useState('');
+  const [searchOptions, setSearchOptions] = useState(options);
 
   /*
-   * Event handler for updating the value of this dropdown.
+   * Event handler for updating the state for the items in this dropdown.
    */
   const onClickUpdateState =
     (item: any): React.MouseEventHandler<HTMLButtonElement> =>
@@ -29,6 +31,22 @@ export const Drawer: React.FC<IDrawer> = ({
       setState(item);
       setShowDrawer(false);
     };
+
+  /*
+   * Event handler for updating the options of this dropdown given a search term.
+   */
+  const onClickUpdateSearch: React.ChangeEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    event.preventDefault();
+    const value = event.target.value;
+    const _options = options.filter((item) =>
+      item.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setSearch(value);
+    setSearchOptions(_options);
+  };
 
   return (
     <div
@@ -48,10 +66,16 @@ export const Drawer: React.FC<IDrawer> = ({
         </div>
 
         {/* Search Row */}
+        <input
+          type="text"
+          placeholder="Search..."
+          onChange={onClickUpdateSearch}
+          value={search}
+        />
 
         {/* List of Options */}
         <div className={['w-full relative', 'grid grid-cols-1'].join(' ')}>
-          {options.map((item, i) => (
+          {searchOptions.map((item, i) => (
             <button
               key={i}
               onClick={onClickUpdateState(item)}
