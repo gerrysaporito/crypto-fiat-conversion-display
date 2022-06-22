@@ -161,6 +161,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
         'h-full max-h-[600px] w-full max-w-sm',
         'rounded-2xl',
         'px-10 py-10',
+        'text-sm',
       ].join(' ')}
       style={{ backgroundColor: 'lightblue' }}
     >
