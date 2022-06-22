@@ -1,12 +1,15 @@
-import { ECrypto } from '../../utils/enums/ECrypto';
-import { EFiat } from '../../utils/enums/EFiat';
+import { useDrawer } from '../../hooks/useDrawer';
+import { ECrypto, Crypto } from '../../utils/enums/ECrypto';
+import { EFiat, Fiat } from '../../utils/enums/EFiat';
 import { Conversion } from '../../utils/utility/Conversion';
+import { Caret } from './Caret';
 
 /*
  * A single input row on the conversion display
  */
 interface ConversionInput {
-  header: string;
+  description: string;
+  drawerTitle: string;
   amount: string;
   setAmount: React.Dispatch<React.SetStateAction<string>>;
   selectedCurrency: keyof typeof EFiat | keyof typeof ECrypto;
@@ -17,7 +20,8 @@ interface ConversionInput {
   >;
 }
 export const ConversionInput: React.FC<ConversionInput> = ({
-  header,
+  description,
+  drawerTitle,
   amount,
   setAmount,
   selectedCurrency,
@@ -25,17 +29,23 @@ export const ConversionInput: React.FC<ConversionInput> = ({
   setLastUpdated,
   lastUpdated,
 }) => {
-  const currencies = Conversion.isFiat(selectedCurrency) ? EFiat : ECrypto;
+  const currencies = Object.keys(
+    Conversion.isFiat(selectedCurrency) ? EFiat : ECrypto
+  );
   const placeholderAmount = Conversion.isFiat(selectedCurrency) ? '100' : '0.1';
-  /*
-   * React element for each option within the select.
-   */
-  const options = Object.keys(currencies).map((item, i) => (
-    <option key={i} value={item}>
-      {currencies[item as keyof typeof currencies]}
-    </option>
-  ));
 
+  /*
+   * Drawer with options for specific input element.
+   */
+  const { drawer, onClickUpdateShowDrawer } = useDrawer<EFiat | ECrypto>({
+    title: drawerTitle,
+    onClickFn: (item: EFiat | ECrypto) => {
+      setLastUpdated(lastUpdated);
+      setSelectedCurrency(item);
+    },
+    optionKeys: currencies as unknown as (EFiat | ECrypto)[],
+    optionMap: { ...Fiat, ...Crypto },
+  });
   /*
    * Event handler to update monetary amount to show.
    */
@@ -64,39 +74,39 @@ export const ConversionInput: React.FC<ConversionInput> = ({
     event.preventDefault();
     event.persist();
     const value = event.target.value as EFiat | ECrypto;
-
-    setLastUpdated(lastUpdated);
-    setSelectedCurrency(value);
   };
 
   return (
-    <div className="w-full">
-      <label htmlFor={selectedCurrency}>{header}</label>
-      <div className="w-full grid grid-cols-7 pt-2 text-base">
-        <input
-          name={selectedCurrency}
-          type="number"
-          onChange={onChangeUpdateAmount}
-          value={amount}
-          placeholder={placeholderAmount}
-          className={[
-            'w-full col-span-5',
-            'px-4 py-2 rounded-l-lg',
-            'bg-gray-100',
-          ].join(' ')}
-        />
-        <select
-          onChange={onChangeUpdateCurrency}
-          value={selectedCurrency}
-          className={[
-            'w-full col-span-2',
-            'rounded-r-lg px-2 py-2',
-            'bg-[#EDEDEF]',
-          ].join(' ')}
-        >
-          {options}
-        </select>
+    <>
+      <div className="w-full">
+        <label htmlFor={selectedCurrency}>{description}</label>
+        <div className="w-full grid grid-cols-7 pt-2 text-base">
+          <input
+            name={selectedCurrency}
+            type="number"
+            onChange={onChangeUpdateAmount}
+            value={amount}
+            placeholder={placeholderAmount}
+            className={[
+              'w-full col-span-5',
+              'px-4 py-2 rounded-l-lg',
+              'bg-gray-100',
+            ].join(' ')}
+          />
+          <button
+            onClick={onClickUpdateShowDrawer}
+            className={[
+              'w-full col-span-2 flex justify-between items-center',
+              'rounded-r-lg pl-4 pr-2 py-2',
+              'bg-[#EDEDEF]',
+            ].join(' ')}
+          >
+            {selectedCurrency}
+            <Caret type="down" />
+          </button>
+        </div>
       </div>
-    </div>
+      {drawer}
+    </>
   );
 };

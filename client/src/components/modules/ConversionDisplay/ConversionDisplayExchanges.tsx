@@ -13,9 +13,10 @@ export const ConversionDisplayExchanges: React.FC<
 
   const { drawer, onClickUpdateShowDrawer } = useDrawer<EExchange>({
     title: 'Select an exchange',
-    setState: setExchange,
+    onClickFn: (item: EExchange) => {
+      setExchange(item);
+    },
     optionKeys: exchanges as EExchange[],
-    // optionMap: EExchange,
   });
 
   return (

@@ -4,6 +4,7 @@ import { ECrypto } from '../../../utils/enums/ECrypto';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Cleaning } from '../../../utils/utility/Cleaning';
+import { Caret } from '../../ui/Caret';
 import { HorizontalRule } from '../../ui/HorizontalRule';
 
 const DOWN_CARET_SRC =
@@ -109,11 +110,7 @@ const SummaryBanner: React.FC<ISummaryBanner> = ({
         </span>
       </p>
       <button onClick={onCaretClick}>
-        <Image
-          src={showExtra ? UP_CARET_SRC : DOWN_CARET_SRC}
-          width="20px"
-          height="20px"
-        />
+        <Caret type={showExtra ? 'up' : 'down'} />
       </button>
     </div>
   );

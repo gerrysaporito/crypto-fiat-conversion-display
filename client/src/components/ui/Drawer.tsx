@@ -5,7 +5,7 @@ interface IDrawer {
   showDrawer: boolean;
   setShowDrawer: React.Dispatch<React.SetStateAction<boolean>>;
   onClickUpdateShowDrawer: React.MouseEventHandler<HTMLButtonElement>;
-  setState: React.Dispatch<React.SetStateAction<any>>;
+  onClickFn: (item?: any) => void;
   optionKeys: any[];
   optionMap?: any;
 }
@@ -15,7 +15,7 @@ export const Drawer: React.FC<IDrawer> = ({
   showDrawer,
   onClickUpdateShowDrawer,
   setShowDrawer,
-  setState,
+  onClickFn,
   optionKeys,
   optionMap,
 }) => {
@@ -30,7 +30,7 @@ export const Drawer: React.FC<IDrawer> = ({
     (item: any): React.MouseEventHandler<HTMLButtonElement> =>
     (event) => {
       event.preventDefault();
-      setState(item);
+      if (onClickFn) onClickFn(item);
       setShowDrawer(false);
     };
 
@@ -43,7 +43,9 @@ export const Drawer: React.FC<IDrawer> = ({
     event.preventDefault();
     const value = event.target.value;
     const _options = optionKeys.filter(
-      (item) => item.toLowerCase().indexOf(value.toLowerCase()) === 0
+      (item: string) =>
+        item.toLowerCase().includes(value.toLowerCase()) ||
+        optionMap[item].toLowerCase().includes(value.toLowerCase())
     );
 
     setSearch(value);

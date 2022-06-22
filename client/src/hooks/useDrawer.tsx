@@ -5,19 +5,22 @@ import { IError } from '../utils/types/IError';
 
 interface IDrawer<T> {
   title: string;
-  setState: React.Dispatch<React.SetStateAction<T>>;
+  onClickFn: (item?: any) => void;
   optionKeys: T[];
   optionMap?: { [key: string]: string };
 }
 
 export function useDrawer<T>({
   title,
-  setState,
+  onClickFn,
   optionKeys,
   optionMap,
 }: IDrawer<T>) {
   const [showDrawer, setShowDrawer] = useState(false);
 
+  /*
+   * Event handler to set state of the drawer's visibility
+   */
   const onClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();
     setShowDrawer((prev) => !prev);
@@ -30,7 +33,7 @@ export function useDrawer<T>({
       setShowDrawer={setShowDrawer}
       optionKeys={optionKeys}
       optionMap={optionMap}
-      setState={setState}
+      onClickFn={onClickFn}
     />
   );
 

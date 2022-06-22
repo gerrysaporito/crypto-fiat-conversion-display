@@ -170,7 +170,8 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
         selectedExchange={exchange}
       />
       <ConversionInput
-        header="I want to spend"
+        description="I want to spend"
+        drawerTitle="Select Currency"
         amount={baseAmount}
         setAmount={setBaseAmount}
         selectedCurrency={baseCurrency}
@@ -179,7 +180,8 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
         setLastUpdated={setLastUpdated}
       />
       <ConversionInput
-        header="I want to buy"
+        description="I want to buy"
+        drawerTitle="Select Currency"
         amount={desiredAmount}
         setAmount={setDesiredAmount}
         selectedCurrency={desiredCurrency}

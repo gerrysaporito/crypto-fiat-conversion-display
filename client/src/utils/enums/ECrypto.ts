@@ -23,7 +23,7 @@ export enum ECrypto {
   // XRP = 'XRP',
 }
 
-const Crypto: { [key in ECrypto]: string } = {
+export const Crypto: { [key in ECrypto]: string } = {
   // [ECrypto.AUR]: 'Auroracoin',
   // [ECrypto.BCH]: 'Bitcoin Cash',
   [ECrypto.BTC]: 'Bitcoin',
