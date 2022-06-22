@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Caret } from './Caret';
 
 interface IDrawer {
   title: string;
@@ -97,9 +98,13 @@ export const Drawer: React.FC<IDrawer> = ({
               <button
                 key={i}
                 onClick={onClickUpdateState(item)}
-                className="w-full pt-2 pb-3 text-left"
+                className="w-full pt-2 pb-3 text-left flex justify-between"
               >
-                {item} {optionMap && ` - ${optionMap[item]}`}
+                <span>
+                  <span className="font-bold">{item}</span>{' '}
+                  {optionMap && ` - ${optionMap[item]}`}
+                </span>
+                <Caret type="right" />
               </button>
             ))}
           </div>

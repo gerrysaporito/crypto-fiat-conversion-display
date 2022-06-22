@@ -1,12 +1,12 @@
 import Image from 'next/image';
 
-const DOWN_CARET_SRC =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Caret_down_font_awesome.svg/512px-Caret_down_font_awesome.svg.png?20130126203221';
-const UP_CARET_SRC =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Caret_up_font_awesome.svg/512px-Caret_up_font_awesome.svg.png?20130126203252';
+const DOWN_CARET_SRC = 'https://www.svgrepo.com/show/315098/caret-down.svg';
+const UP_CARET_SRC = 'https://www.svgrepo.com/show/315106/caret-up.svg';
+const RIGHT_CARET_SRC = 'https://www.svgrepo.com/show/315104/caret-right.svg';
+const LEFT_CARET_SRC = 'https://www.svgrepo.com/show/315101/caret-left.svg';
 
 interface ICaret {
-  type: 'up' | 'down';
+  type: 'up' | 'down' | 'right' | 'left';
   width?: number;
   height?: number;
 }
@@ -22,6 +22,14 @@ export const Caret: React.FC<ICaret> = ({ type, width, height }) => {
       src = DOWN_CARET_SRC;
       break;
     }
+    case 'right': {
+      src = RIGHT_CARET_SRC;
+      break;
+    }
+    case 'left': {
+      src = LEFT_CARET_SRC;
+      break;
+    }
     default: {
       throw new Error(`Invalid type passed to caret: '${type}'`);
     }
@@ -30,9 +38,9 @@ export const Caret: React.FC<ICaret> = ({ type, width, height }) => {
   return (
     <Image
       src={src}
-      alt={`Caret ${type}`}
-      width={`${width || '16'}px`}
-      height={`${height || '16'}px`}
+      alt={`Caret ${type} icon.`}
+      width={`${width || '22'}px`}
+      height={`${height || '22'}px`}
     />
   );
 };
