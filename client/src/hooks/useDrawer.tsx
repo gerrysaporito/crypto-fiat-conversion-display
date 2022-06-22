@@ -5,11 +5,17 @@ import { IError } from '../utils/types/IError';
 
 interface IDrawer<T> {
   title: string;
-  options: T[];
   setState: React.Dispatch<React.SetStateAction<T>>;
+  optionKeys: T[];
+  optionMap?: { [key: string]: string };
 }
 
-export function useDrawer<T>({ title, options, setState }: IDrawer<T>) {
+export function useDrawer<T>({
+  title,
+  setState,
+  optionKeys,
+  optionMap,
+}: IDrawer<T>) {
   const [showDrawer, setShowDrawer] = useState(false);
 
   const onClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -22,7 +28,8 @@ export function useDrawer<T>({ title, options, setState }: IDrawer<T>) {
       showDrawer={showDrawer}
       onClickUpdateShowDrawer={onClick}
       setShowDrawer={setShowDrawer}
-      options={options}
+      optionKeys={optionKeys}
+      optionMap={optionMap}
       setState={setState}
     />
   );

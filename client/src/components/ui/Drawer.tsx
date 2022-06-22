@@ -5,8 +5,9 @@ interface IDrawer {
   showDrawer: boolean;
   setShowDrawer: React.Dispatch<React.SetStateAction<boolean>>;
   onClickUpdateShowDrawer: React.MouseEventHandler<HTMLButtonElement>;
-  options: any[];
   setState: React.Dispatch<React.SetStateAction<any>>;
+  optionKeys: any[];
+  optionMap?: any;
 }
 
 export const Drawer: React.FC<IDrawer> = ({
@@ -14,12 +15,13 @@ export const Drawer: React.FC<IDrawer> = ({
   showDrawer,
   onClickUpdateShowDrawer,
   setShowDrawer,
-  options,
   setState,
+  optionKeys,
+  optionMap,
 }) => {
   if (!showDrawer) return <></>;
   const [search, setSearch] = useState('');
-  const [searchOptions, setSearchOptions] = useState(options);
+  const [searchOptions, setSearchOptions] = useState(optionKeys);
 
   /*
    * Event handler for updating the state for the items in this dropdown.
@@ -33,14 +35,14 @@ export const Drawer: React.FC<IDrawer> = ({
     };
 
   /*
-   * Event handler for updating the options of this dropdown given a search term.
+   * Event handler for updating the optionKeys of this dropdown given a search term.
    */
   const onClickUpdateSearch: React.ChangeEventHandler<HTMLInputElement> = (
     event
   ) => {
     event.preventDefault();
     const value = event.target.value;
-    const _options = options.filter(
+    const _options = optionKeys.filter(
       (item) => item.toLowerCase().indexOf(value.toLowerCase()) === 0
     );
 
@@ -95,7 +97,7 @@ export const Drawer: React.FC<IDrawer> = ({
                 onClick={onClickUpdateState(item)}
                 className="w-full pt-2 pb-3 text-left"
               >
-                {item}
+                {item} {optionMap && ` - ${optionMap[item]}`}
               </button>
             ))}
           </div>
