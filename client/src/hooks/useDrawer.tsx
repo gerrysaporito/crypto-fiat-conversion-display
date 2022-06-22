@@ -1,7 +1,5 @@
-import axios from 'axios';
 import { useState } from 'react';
 import { Drawer } from '../components/ui/Drawer';
-import { IError } from '../utils/types/IError';
 
 interface IDrawer<T> {
   title: string;
@@ -25,6 +23,10 @@ export function useDrawer<T>({
     event.preventDefault();
     setShowDrawer((prev) => !prev);
   };
+
+  /*
+   * Drawer component.
+   */
   const drawer = (
     <Drawer
       title={title}

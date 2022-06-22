@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 const DOWN_CARET_SRC = 'https://www.svgrepo.com/show/315098/caret-down.svg';
 const UP_CARET_SRC = 'https://www.svgrepo.com/show/315106/caret-up.svg';
 const RIGHT_CARET_SRC = 'https://www.svgrepo.com/show/315104/caret-right.svg';
@@ -36,7 +34,7 @@ export const Caret: React.FC<ICaret> = ({ type, width, height }) => {
   }
 
   return (
-    <Image
+    <img
       src={src}
       alt={`Caret ${type} icon.`}
       width={`${width || '22'}px`}

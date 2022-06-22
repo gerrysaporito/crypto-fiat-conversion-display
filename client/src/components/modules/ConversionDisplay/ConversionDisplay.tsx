@@ -157,46 +157,50 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
 
   return (
     <div
-      className={[
-        'relative w-full max-w-sm',
-        'rounded-2xl px-10 py-10',
-        'text-sm',
-        'grid grid-cols-1 gap-5',
-      ].join(' ')}
+      className={['relative w-full max-w-sm', 'rounded-2xl', 'text-sm'].join(
+        ' '
+      )}
       style={{ backgroundColor: 'lightblue' }}
     >
-      <ConversionDisplayExchanges
-        setExchange={setExchange}
-        selectedExchange={exchange}
-      />
-      <ConversionInput
-        description="I want to spend"
-        drawerTitle="Select Currency"
-        amount={baseAmount}
-        setAmount={setBaseAmount}
-        selectedCurrency={baseCurrency}
-        setSelectedCurrency={setBaseCurrency}
-        lastUpdated="baseAmount"
-        setLastUpdated={setLastUpdated}
-      />
-      <ConversionInput
-        description="I want to buy"
-        drawerTitle="Select Currency"
-        amount={desiredAmount}
-        setAmount={setDesiredAmount}
-        selectedCurrency={desiredCurrency}
-        setSelectedCurrency={setDesiredCurrency}
-        lastUpdated="desiredAmount"
-        setLastUpdated={setLastUpdated}
-      />
-      <ConversionDisplaySummary
-        baseCurrency={baseCurrency}
-        baseAmount={baseAmount}
-        desiredCurrency={desiredCurrency}
-        desiredAmount={desiredAmount}
-        exchangeRate={exchangeRate}
-        timeLeft={timeLeft}
-      />
+      <div
+        className={[
+          'relative mx-10 pb-10 mt-10',
+          'grid grid-cols-1 gap-5',
+        ].join(' ')}
+      >
+        <ConversionDisplayExchanges
+          setExchange={setExchange}
+          selectedExchange={exchange}
+        />
+        <ConversionInput
+          description="I want to spend"
+          drawerTitle="Select Currency"
+          amount={baseAmount}
+          setAmount={setBaseAmount}
+          selectedCurrency={baseCurrency}
+          setSelectedCurrency={setBaseCurrency}
+          lastUpdated="baseAmount"
+          setLastUpdated={setLastUpdated}
+        />
+        <ConversionInput
+          description="I want to buy"
+          drawerTitle="Select Currency"
+          amount={desiredAmount}
+          setAmount={setDesiredAmount}
+          selectedCurrency={desiredCurrency}
+          setSelectedCurrency={setDesiredCurrency}
+          lastUpdated="desiredAmount"
+          setLastUpdated={setLastUpdated}
+        />
+        <ConversionDisplaySummary
+          baseCurrency={baseCurrency}
+          baseAmount={baseAmount}
+          desiredCurrency={desiredCurrency}
+          desiredAmount={desiredAmount}
+          exchangeRate={exchangeRate}
+          timeLeft={timeLeft}
+        />
+      </div>
     </div>
   );
 };
