@@ -46,6 +46,8 @@ export const ConversionInput: React.FC<ConversionInput> = ({
     event.persist();
     let value = event.target.value;
     const decimals = value.split('.')[1];
+
+    // if (!!!+value || parseFloat(value) <= 0) return; // Check if negative or invalid number
     if (Conversion.isFiat(selectedCurrency) && decimals?.length > 2) return;
     if (Conversion.isCrypto(selectedCurrency) && decimals?.length > 5) return;
 
@@ -68,7 +70,7 @@ export const ConversionInput: React.FC<ConversionInput> = ({
   };
 
   return (
-    <div className="w-full py-2">
+    <div className="w-full">
       <label htmlFor={selectedCurrency}>{header}</label>
       <div className="w-full grid grid-cols-7 pt-2 text-base">
         <input

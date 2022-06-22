@@ -1,17 +1,17 @@
 interface IHorizontalRule {
   width?: 'full';
-  classNames?: string;
+  className?: string;
 }
 export const HorizontalRule: React.FC<IHorizontalRule> = ({
   width,
-  classNames,
+  className,
 }) => {
   return (
     <div
       className={[
         'w-full',
         'border-t outline-3 border-gray-400',
-        classNames,
+        className,
       ].join(' ')}
     />
   );

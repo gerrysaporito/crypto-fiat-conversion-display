@@ -5,8 +5,8 @@ import { EExchange } from '../../../utils/enums/EExchange';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../utils/utility/Conversion';
+import { ConversionInput } from '../../ui/ConversionInputs';
 import { ConversionDisplayExchanges } from './ConversionDisplayExchanges';
-import { ConversionDisplayInputs } from './ConversionDisplayInputs';
 import { ConversionDisplaySummary } from './ConversionDisplaySummary';
 
 interface IConversionDisplay {
@@ -169,25 +169,34 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
         setExchange={setExchange}
         selectedExchange={exchange}
       />
-      <ConversionDisplayInputs
-        baseCurrency={baseCurrency}
-        setBaseCurrency={setBaseCurrency}
-        baseAmount={baseAmount}
-        setBaseAmount={setBaseAmount}
-        desiredCurrency={desiredCurrency}
-        setDesiredCurrency={setDesiredCurrency}
-        desiredAmount={desiredAmount}
-        setDesiredAmount={setDesiredAmount}
-        setLastUpdated={setLastUpdated}
-      />
-      <ConversionDisplaySummary
-        baseCurrency={baseCurrency}
-        baseAmount={baseAmount}
-        desiredCurrency={desiredCurrency}
-        desiredAmount={desiredAmount}
-        exchangeRate={exchangeRate}
-        timeLeft={timeLeft}
-      />
+      <div className="grid grid-cols-1 gap-5">
+        <ConversionInput
+          header="I want to spend"
+          amount={baseAmount}
+          setAmount={setBaseAmount}
+          selectedCurrency={baseCurrency}
+          setSelectedCurrency={setBaseCurrency}
+          lastUpdated="baseAmount"
+          setLastUpdated={setLastUpdated}
+        />
+        <ConversionInput
+          header="I want to buy"
+          amount={desiredAmount}
+          setAmount={setDesiredAmount}
+          selectedCurrency={desiredCurrency}
+          setSelectedCurrency={setDesiredCurrency}
+          lastUpdated="desiredAmount"
+          setLastUpdated={setLastUpdated}
+        />
+        <ConversionDisplaySummary
+          baseCurrency={baseCurrency}
+          baseAmount={baseAmount}
+          desiredCurrency={desiredCurrency}
+          desiredAmount={desiredAmount}
+          exchangeRate={exchangeRate}
+          timeLeft={timeLeft}
+        />
+      </div>
     </div>
   );
 };
