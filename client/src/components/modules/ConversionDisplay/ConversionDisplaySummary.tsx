@@ -57,7 +57,7 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
             <div>
               <HorizontalRule className="mt-1 mb-2" />
               {SummaryInfo.map((item, i) => (
-                <div className="flex justify-between">
+                <div key={i} className="flex justify-between">
                   <p>{item[0]}</p>
                   <p>{item[1]}</p>
                 </div>

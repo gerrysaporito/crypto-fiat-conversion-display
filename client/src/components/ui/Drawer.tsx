@@ -40,8 +40,8 @@ export const Drawer: React.FC<IDrawer> = ({
   ) => {
     event.preventDefault();
     const value = event.target.value;
-    const _options = options.filter((item) =>
-      item.toLowerCase().includes(value.toLowerCase())
+    const _options = options.filter(
+      (item) => item.toLowerCase().indexOf(value.toLowerCase()) === 0
     );
 
     setSearch(value);
@@ -53,37 +53,52 @@ export const Drawer: React.FC<IDrawer> = ({
       className={[
         'w-full h-full absolute top-0 right-0',
         'rounded-2xl px-10 py-10',
+        `${showDrawer && 'z-10'}`,
       ].join(' ')}
       style={{ backgroundColor: 'lightblue' }}
     >
-      <div className="w-full relative">
+      <div className="w-full h-full flex flex-col">
         {/* Title row */}
-        <div className="flex justify-between items-center pb-10">
+        <div className="flex justify-between items-center">
           <h2 className="text-xl">{title}</h2>
           <button onClick={onClickUpdateShowDrawer} className="text-xl">
             x
           </button>
         </div>
 
-        {/* Search Row */}
+        {/* Search Bar */}
         <input
           type="text"
           placeholder="Search..."
           onChange={onClickUpdateSearch}
           value={search}
+          className={[
+            'w-full',
+            'px-4 py-2 my-4 rounded-lg',
+            'bg-gray-100',
+          ].join(' ')}
         />
 
         {/* List of Options */}
-        <div className={['w-full relative', 'grid grid-cols-1'].join(' ')}>
-          {searchOptions.map((item, i) => (
-            <button
-              key={i}
-              onClick={onClickUpdateState(item)}
-              className="w-full pt-2 pb-3"
-            >
-              {item}
-            </button>
-          ))}
+        <div className="w-full flex-grow relative">
+          <div
+            className={[
+              'w-full h-full',
+              'absolute top-0 right-0',
+              'flex flex-col',
+              'overflow-y-auto round-scroll-bar',
+            ].join(' ')}
+          >
+            {searchOptions.map((item, i) => (
+              <button
+                key={i}
+                onClick={onClickUpdateState(item)}
+                className="w-full pt-2 pb-3 text-left"
+              >
+                {item}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>
