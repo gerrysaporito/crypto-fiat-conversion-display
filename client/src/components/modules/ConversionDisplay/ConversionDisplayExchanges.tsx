@@ -21,7 +21,11 @@ export const ConversionDisplayExchanges: React.FC<
 
   return (
     <div className="w-full overflow-x-scroll hide-scroll-bar">
-      <button onClick={onClickUpdateShowDrawer}>{selectedExchange}</button>
+      <button onClick={onClickUpdateShowDrawer}>
+        <h2 className="text-3xl font-semibold">
+          Quotes from {selectedExchange}
+        </h2>
+      </button>
       {drawer}
     </div>
   );
