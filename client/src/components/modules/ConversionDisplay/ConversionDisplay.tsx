@@ -158,7 +158,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   return (
     <div
       className={[
-        'h-full max-h-[600px] w-full max-w-sm',
+        'w-full max-w-sm',
         'rounded-2xl',
         'px-10 py-10',
         'text-sm',
