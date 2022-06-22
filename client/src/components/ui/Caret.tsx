@@ -7,8 +7,9 @@ interface ICaret {
   type: 'up' | 'down' | 'right' | 'left';
   width?: number;
   height?: number;
+  className?: string;
 }
-export const Caret: React.FC<ICaret> = ({ type, width, height }) => {
+export const Caret: React.FC<ICaret> = ({ type, width, height, className }) => {
   let src = '';
 
   switch (type) {
@@ -39,6 +40,7 @@ export const Caret: React.FC<ICaret> = ({ type, width, height }) => {
       alt={`Caret ${type} icon.`}
       width={`${width || '22'}px`}
       height={`${height || '22'}px`}
+      className={className}
     />
   );
 };

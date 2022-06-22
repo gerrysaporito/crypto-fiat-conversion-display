@@ -47,7 +47,11 @@ export const Drawer: React.FC<IDrawer> = ({
     const _options = optionKeys.filter(
       (item: string) =>
         item.toLowerCase().includes(value.toLowerCase()) ||
-        optionMap[item].toLowerCase().includes(value.toLowerCase())
+        (optionMap &&
+          item in optionMap &&
+          optionMap[item.toLowerCase()]
+            .toLowerCase()
+            .includes(value.toLowerCase()))
     );
 
     setSearch(value);
