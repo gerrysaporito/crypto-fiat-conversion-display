@@ -162,6 +162,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
         'rounded-2xl',
         'px-10 py-10',
         'text-sm',
+        'grid grid-cols-1 gap-5',
       ].join(' ')}
       style={{ backgroundColor: 'lightblue' }}
     >
@@ -169,34 +170,32 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
         setExchange={setExchange}
         selectedExchange={exchange}
       />
-      <div className="grid grid-cols-1 gap-5">
-        <ConversionInput
-          header="I want to spend"
-          amount={baseAmount}
-          setAmount={setBaseAmount}
-          selectedCurrency={baseCurrency}
-          setSelectedCurrency={setBaseCurrency}
-          lastUpdated="baseAmount"
-          setLastUpdated={setLastUpdated}
-        />
-        <ConversionInput
-          header="I want to buy"
-          amount={desiredAmount}
-          setAmount={setDesiredAmount}
-          selectedCurrency={desiredCurrency}
-          setSelectedCurrency={setDesiredCurrency}
-          lastUpdated="desiredAmount"
-          setLastUpdated={setLastUpdated}
-        />
-        <ConversionDisplaySummary
-          baseCurrency={baseCurrency}
-          baseAmount={baseAmount}
-          desiredCurrency={desiredCurrency}
-          desiredAmount={desiredAmount}
-          exchangeRate={exchangeRate}
-          timeLeft={timeLeft}
-        />
-      </div>
+      <ConversionInput
+        header="I want to spend"
+        amount={baseAmount}
+        setAmount={setBaseAmount}
+        selectedCurrency={baseCurrency}
+        setSelectedCurrency={setBaseCurrency}
+        lastUpdated="baseAmount"
+        setLastUpdated={setLastUpdated}
+      />
+      <ConversionInput
+        header="I want to buy"
+        amount={desiredAmount}
+        setAmount={setDesiredAmount}
+        selectedCurrency={desiredCurrency}
+        setSelectedCurrency={setDesiredCurrency}
+        lastUpdated="desiredAmount"
+        setLastUpdated={setLastUpdated}
+      />
+      <ConversionDisplaySummary
+        baseCurrency={baseCurrency}
+        baseAmount={baseAmount}
+        desiredCurrency={desiredCurrency}
+        desiredAmount={desiredAmount}
+        exchangeRate={exchangeRate}
+        timeLeft={timeLeft}
+      />
     </div>
   );
 };

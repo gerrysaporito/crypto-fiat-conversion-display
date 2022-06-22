@@ -32,7 +32,7 @@ export const ConversionDisplayExchanges: React.FC<
         key={i}
         onClick={onClickUpdateExchange(key as EExchange)}
         className={[
-          'px-6 py-3 mx-3',
+          'px-6 py-3',
           `font-semibold text-lg ${active ? 'text-sky-900' : 'text-slate-500'}`,
         ].join(' ')}
       >
