@@ -38,7 +38,7 @@ export const ConversionDisplayExchanges: React.FC<
             theme="light"
             width={30}
             height={30}
-            className="mt-1 ml-3"
+            className="mt-[10px] ml-2"
           />
         </h2>
       </button>
