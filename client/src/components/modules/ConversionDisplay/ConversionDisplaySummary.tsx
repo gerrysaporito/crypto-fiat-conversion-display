@@ -14,6 +14,7 @@ interface IConversionDisplaySummary {
   desiredAmount: string;
   desiredCurrency: EFiat | ECrypto;
   timeLeft: number;
+  error: boolean;
 }
 
 /*
@@ -29,6 +30,7 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
     desiredCurrency,
     baseCurrency,
     exchangeRate,
+    error,
   } = props;
   const showSummary = !!baseAmount && !!desiredAmount;
   const SummaryInfo = getSummaryInfo(props);
@@ -64,17 +66,21 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
             <div className="pl-4 pr-2 pb-3 pt-3 bg-gray-100">
               {/* Summary Banner */}
               <div className="flex justify-between">
-                <p>
-                  You get{' '}
-                  <span className="font-bold tabular-nums">
-                    {Cleaning.cleanStringAmount(desiredAmount)}{' '}
-                    {desiredCurrency}
-                  </span>{' '}
-                  for{' '}
-                  <span className="font-bold tabular-nums">
-                    {Cleaning.cleanStringAmount(baseAmount)} {baseCurrency}
-                  </span>
-                </p>
+                {!error ? (
+                  <p>
+                    You get{' '}
+                    <span className="font-bold tabular-nums">
+                      {Cleaning.cleanStringAmount(desiredAmount)}{' '}
+                      {desiredCurrency}
+                    </span>{' '}
+                    for{' '}
+                    <span className="font-bold tabular-nums">
+                      {Cleaning.cleanStringAmount(baseAmount)} {baseCurrency}
+                    </span>
+                  </p>
+                ) : (
+                  <p>No summary available for this conversion.</p>
+                )}
                 <button onClick={onCaretClick}>
                   <Caret type={showExtra ? 'up' : 'down'} />
                 </button>
@@ -89,8 +95,14 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
                     <HorizontalRule className="pb-2" />
                     {SummaryInfo.map((item, i) => (
                       <div key={i} className="w-full flex justify-between">
-                        <p>{item[0]}</p>
-                        <p>{item[1]}</p>
+                        {!error ? (
+                          <>
+                            <p>{item[0]}</p>
+                            <p>{item[1]}</p>
+                          </>
+                        ) : (
+                          <p>Data unavailable</p>
+                        )}
                       </div>
                     ))}
                   </div>

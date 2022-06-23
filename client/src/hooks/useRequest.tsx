@@ -24,7 +24,7 @@ export function useRequest<T>({ url, method, body, onSuccess }: IRequest<T>) {
    */
   const doRequest = async (props = {}): Promise<T | void> => {
     try {
-      // set_Error(null);
+      set_Error('');
       const response = await axios[method]<T>(url, {
         ...body,
         ...props,

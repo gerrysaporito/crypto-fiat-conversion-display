@@ -21,13 +21,13 @@ interface IConversionDisplay {
 export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   cooldown,
 }) => {
-  const _cooldown = cooldown || 20;
+  const _cooldown = cooldown || 10;
 
   /*
    * State variables.
    */
   const [timeLeft, setTimeLeft] = useState<number>(_cooldown);
-  const [error, setError] = useState<string>();
+  // const [error, setError] = useState<string>();
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
   const [exchangeRate, setExchangeRate] = useState<IExchangeRate | null>(null);
   const [baseAmount, setBaseAmount] = useState<string>('100');
@@ -53,6 +53,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     url: `/api/v1/ftx/exchange-rate?base=${baseCurrency}&desired=${desiredCurrency}`,
     method: 'get',
   });
+  const error = coinbaseError || ftxError;
 
   /*
    * Calls the api given the proper exchange api-calling functions.
@@ -92,6 +93,8 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   const updateAmounts = async () => {
     if (!exchangeRate) return;
 
+    if (!!error) exchangeRate.rate = 0;
+
     switch (lastUpdated) {
       case 'baseAmount': {
         await setDesiredAmount(
@@ -123,7 +126,6 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
    * Update timer whenever exchange/currencies change or when timer runs out.
    */
   useEffect(() => {
-    setError('');
     updateExchangeRate();
     setTimeLeft(_cooldown);
 
@@ -146,22 +148,24 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
    */
   useEffect(() => {
     updateAmounts();
-  }, [lastUpdated, baseAmount, desiredAmount, exchangeRate]);
-
-  /*
-   * Updates error on screen if error occurs during API call.
-   */
-  useEffect(() => {
-    if (ftxError) setError(ftxError);
-    if (coinbaseError) setError(coinbaseError);
-  }, [coinbaseError, ftxError]);
+  }, [
+    lastUpdated,
+    baseAmount,
+    desiredAmount,
+    exchangeRate,
+    exchange,
+    baseCurrency,
+    desiredCurrency,
+  ]);
 
   /*
    * Updates exchange rate when time runs out.
+   * Also clears all inputs if there is an error on the screen.
    */
-  if (timeLeft === 0 && !!!error) {
-    updateExchangeRate();
-  }
+  useEffect(() => {
+    updateAmounts();
+    if (timeLeft === 0 && !!!error) updateExchangeRate();
+  }, [timeLeft, error]);
 
   return (
     <div
@@ -205,6 +209,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
           desiredAmount={desiredAmount}
           exchangeRate={exchangeRate}
           timeLeft={timeLeft}
+          error={!!error}
         />
         <div className="text-[#FF0000]">{error}</div>
       </div>
