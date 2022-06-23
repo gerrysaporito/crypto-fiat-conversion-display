@@ -1,0 +1,47 @@
+.expand {
+  &-vertical {
+    &-enter {
+      height: 0;
+    }
+    &-enter-active {
+      height: 100%;
+      transition: height 0.5s ease-in-out;
+    }
+    &-exit {
+      height: 100%;
+    }
+    &-exit-active {
+      height: 0;
+      transition: height 0.5s ease-out;
+    }
+
+    &-padding {
+      &-enter {
+        height: 0;
+        width: 100%;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      &-enter-active {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        height: 100%;
+        width: 100%;
+        transition: padding-top 0.7s ease-in-out,
+          padding-bottom 0.5s ease-in-out, height 0.5s ease-out;
+      }
+      &-exit {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        height: 100%;
+        width: 100%;
+      }
+      &-exit-active {
+        padding-bottom: 0;
+        height: 0;
+        width: 100%;
+        transition: padding-bottom 0.5s ease-in-out, height 0.5s ease-out;
+      }
+    }
+  }
+}

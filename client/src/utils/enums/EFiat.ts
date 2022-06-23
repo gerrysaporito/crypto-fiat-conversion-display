@@ -1,23 +1,23 @@
 export enum EFiat {
-  AUD = 'AUD',
+  // AUD = 'AUD',
   GBP = 'GBP',
   EUR = 'EUR',
   JPY = 'JPY',
   USD = 'USD',
   CAD = 'CAD',
-  CNY = 'CNY',
-  INR = 'INR',
-  RUB = 'RUB',
+  // CNY = 'CNY',
+  // INR = 'INR',
+  // RUB = 'RUB',
 }
 
 export const Fiat: { [key in EFiat]: string } = {
-  [EFiat.AUD]: 'Australia Dollar',
+  // [EFiat.AUD]: 'Australia Dollar',
   [EFiat.GBP]: 'Great Britain Pound',
   [EFiat.EUR]: 'Euro',
   [EFiat.JPY]: 'Japan Yen',
   [EFiat.USD]: 'USA Dollar',
   [EFiat.CAD]: 'Canada Dollar',
-  [EFiat.CNY]: 'China Yuan/Renminbi',
-  [EFiat.INR]: 'India Rupee',
-  [EFiat.RUB]: 'Russia Rouble',
+  // [EFiat.CNY]: 'China Yuan/Renminbi',
+  // [EFiat.INR]: 'India Rupee',
+  // [EFiat.RUB]: 'Russia Rouble',
 };

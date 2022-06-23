@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import useRequest from '../../../hooks/useRequest';
+import { useRequest } from '../../../hooks/useRequest';
 import { ECrypto } from '../../../utils/enums/ECrypto';
 import { EExchange } from '../../../utils/enums/EExchange';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../utils/utility/Conversion';
+import { ConversionInput } from '../../ui/ConversionInputs';
 import { ConversionDisplayExchanges } from './ConversionDisplayExchanges';
-import { ConversionDisplayInputs } from './ConversionDisplayInputs';
 import { ConversionDisplaySummary } from './ConversionDisplaySummary';
 
 interface IConversionDisplay {
@@ -134,7 +134,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [exchange, baseCurrency, desiredCurrency]);
+  }, [exchange, baseCurrency, desiredCurrency, _cooldown]);
 
   /*
    * Update data whenver amounts or exchange rates change
@@ -147,46 +147,50 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     updateExchangeRate();
   }
 
-  useEffect(() => {
-    // console.log(baseCurrency, baseAmount);
-    // console.log(desiredCurrency, desiredAmount);
-    // console.log('lastUpdated', lastUpdated);
-    // console.log(exchangeRate);
-    // console.log(lastUpdated);
-  }, [lastUpdated, exchangeRate]);
-
   return (
     <div
       className={[
-        'h-full max-h-[600px] w-full max-w-sm',
-        'rounded-2xl',
-        'px-10 py-10',
+        'relative w-full max-w-sm',
+        'rounded-2xl overflow-hidden',
+        'text-sm',
+        'shadow-md',
       ].join(' ')}
-      style={{ backgroundColor: 'lightblue' }}
+      style={{ backgroundColor: '#111111', color: 'white' }}
     >
-      <ConversionDisplayExchanges
-        setExchange={setExchange}
-        selectedExchange={exchange}
-      />
-      <ConversionDisplayInputs
-        baseCurrency={baseCurrency}
-        setBaseCurrency={setBaseCurrency}
-        baseAmount={baseAmount}
-        setBaseAmount={setBaseAmount}
-        desiredCurrency={desiredCurrency}
-        setDesiredCurrency={setDesiredCurrency}
-        desiredAmount={desiredAmount}
-        setDesiredAmount={setDesiredAmount}
-        setLastUpdated={setLastUpdated}
-      />
-      <ConversionDisplaySummary
-        baseCurrency={baseCurrency}
-        baseAmount={baseAmount}
-        desiredCurrency={desiredCurrency}
-        desiredAmount={desiredAmount}
-        exchangeRate={exchangeRate}
-        timeLeft={timeLeft}
-      />
+      <div className={['mx-10 my-10', 'grid grid-cols-1 gap-5'].join(' ')}>
+        <ConversionDisplayExchanges
+          setExchange={setExchange}
+          selectedExchange={exchange}
+        />
+        <ConversionInput
+          description="I want to spend"
+          drawerTitle="Select Currency"
+          amount={baseAmount}
+          setAmount={setBaseAmount}
+          selectedCurrency={baseCurrency}
+          setSelectedCurrency={setBaseCurrency}
+          lastUpdated="baseAmount"
+          setLastUpdated={setLastUpdated}
+        />
+        <ConversionInput
+          description="I want to buy"
+          drawerTitle="Select Currency"
+          amount={desiredAmount}
+          setAmount={setDesiredAmount}
+          selectedCurrency={desiredCurrency}
+          setSelectedCurrency={setDesiredCurrency}
+          lastUpdated="desiredAmount"
+          setLastUpdated={setLastUpdated}
+        />
+        <ConversionDisplaySummary
+          baseCurrency={baseCurrency}
+          baseAmount={baseAmount}
+          desiredCurrency={desiredCurrency}
+          desiredAmount={desiredAmount}
+          exchangeRate={exchangeRate}
+          timeLeft={timeLeft}
+        />
+      </div>
     </div>
   );
 };

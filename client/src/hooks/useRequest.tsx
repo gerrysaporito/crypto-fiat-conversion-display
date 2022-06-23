@@ -9,7 +9,7 @@ interface IRequest<T> {
   onSuccess?: (data: T) => void;
 }
 
-function useRequest<T>({ url, method, body, onSuccess }: IRequest<T>) {
+export function useRequest<T>({ url, method, body, onSuccess }: IRequest<T>) {
   /*
    * Local errors from axios request
    */
@@ -59,5 +59,3 @@ function useRequest<T>({ url, method, body, onSuccess }: IRequest<T>) {
     errors: _errors,
   };
 }
-
-export default useRequest;

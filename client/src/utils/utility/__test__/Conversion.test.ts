@@ -4,7 +4,7 @@ import { Conversion } from '../Conversion';
 /*
  * To use the mock stripe, remove the .old extension on the stripe.ts file in the __mocks__ folder.
  */
-describe(`Tests Conversion utility classes static functions`, () => {
+describe(`Tests Conversion utility class' static functions`, () => {
   it('tests isValidCurrencySymbol edge cases', async () => {
     expect(Conversion.isValidCurrencySymbol(EFiat.USD)).toBeTruthy();
     expect(Conversion.isValidCurrencySymbol(ECrypto.BTC)).toBeTruthy();
