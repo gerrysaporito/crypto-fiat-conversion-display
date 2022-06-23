@@ -38,11 +38,11 @@ export function useRequest<T>({ url, method, body, onSuccess }: IRequest<T>) {
     } catch (err: any) {
       if (err?.response?.data?.message) {
         console.error(err);
-        set_Error(err.response.data.message);
+        set_Error(err?.response?.data?.message);
       } else if (err?.response?.data) {
         const message = 'Something went wrong with the API request :(';
-        console.error(message, err.response.data);
-        set_Error(err.response.data.message);
+        console.error(message, err?.response?.data);
+        set_Error(message);
       } else {
         const message = 'Something went wrong :(';
         console.error(message, err);
