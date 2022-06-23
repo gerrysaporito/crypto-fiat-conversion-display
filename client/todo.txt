@@ -1,0 +1,4 @@
+TODO:
+- Display error messages
+- Annotate code
+- Readme
