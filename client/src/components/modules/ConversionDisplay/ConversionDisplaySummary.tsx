@@ -49,7 +49,7 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
 
       {/* Card */}
       {showSummary && (
-        <div className="h-[85px] text-black flex flex-col rounded-b-lg">
+        <div className="h-[90px] text-black flex flex-col rounded-b-lg">
           <div className="rounded-lg overflow-hidden">
             <div className="pl-4 pr-2 pb-3 pt-3 bg-gray-100">
               {/* Summary Banner */}

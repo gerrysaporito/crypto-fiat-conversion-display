@@ -150,7 +150,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   return (
     <div
       className={[
-        'relative w-full max-w-sm',
+        'relative w-full max-w-[90%] sm:max-w-md',
         'rounded-2xl overflow-hidden',
         'text-sm',
         'shadow-md',

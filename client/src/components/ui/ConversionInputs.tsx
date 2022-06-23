@@ -91,6 +91,7 @@ export const ConversionInput: React.FC<ConversionInput> = ({
               'w-full col-span-5',
               'px-4 py-2 rounded-l-lg',
               'bg-gray-100 text-black',
+              'text-sm sm:text-base',
             ].join(' ')}
           />
           <button
@@ -99,6 +100,7 @@ export const ConversionInput: React.FC<ConversionInput> = ({
               'w-full col-span-2 flex justify-between items-center',
               'rounded-r-lg pl-4 pr-2 py-2',
               'bg-[#EDEDEF] text-black',
+              'text-sm sm:text-base',
             ].join(' ')}
           >
             {selectedCurrency}
