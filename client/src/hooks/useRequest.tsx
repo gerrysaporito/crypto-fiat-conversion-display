@@ -54,5 +54,6 @@ export function useRequest<T>({ url, method, body, onSuccess }: IRequest<T>) {
   return {
     doRequest,
     error: _error,
+    setError: set_Error,
   };
 }
