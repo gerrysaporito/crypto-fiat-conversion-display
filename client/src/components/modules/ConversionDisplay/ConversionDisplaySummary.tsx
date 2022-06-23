@@ -1,12 +1,11 @@
-import Image from 'next/image';
 import React, { useState } from 'react';
+import { Expand } from '../../animations/Expand';
+import { Caret } from '../../ui/Caret';
+import { HorizontalRule } from '../../ui/HorizontalRule';
 import { ECrypto } from '../../../utils/enums/ECrypto';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Cleaning } from '../../../utils/utility/Cleaning';
-import { Expand } from '../../animations/Expand';
-import { Caret } from '../../ui/Caret';
-import { HorizontalRule } from '../../ui/HorizontalRule';
 
 interface IConversionDisplaySummary {
   exchangeRate: IExchangeRate | null;
@@ -16,6 +15,10 @@ interface IConversionDisplaySummary {
   desiredCurrency: EFiat | ECrypto;
   timeLeft: number;
 }
+
+/*
+ * React component that displays summary of information for the current conversion.
+ */
 export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
   props
 ) => {
@@ -27,10 +30,17 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
     baseCurrency,
     exchangeRate,
   } = props;
-  const [showExtra, setShowExtra] = useState(false);
   const showSummary = !!baseAmount && !!desiredAmount;
   const SummaryInfo = getSummaryInfo(props);
 
+  /*
+   * State variables.
+   */
+  const [showExtra, setShowExtra] = useState(false);
+
+  /*
+   * Event handler to display the hidden info box.
+   */
   const onCaretClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault;
     setShowExtra((prev) => !prev);
@@ -49,9 +59,9 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
 
       {/* Card */}
       {showSummary && (
-        <div className="h-[80px] text-black flex flex-col rounded-b-lg">
+        <div className="h-[90px] text-black flex flex-col rounded-b-lg">
           <div className="rounded-lg overflow-hidden">
-            <div className="pl-4 pr-2 pb-2 pt-3 bg-gray-100">
+            <div className="pl-4 pr-2 pb-3 pt-3 bg-gray-100">
               {/* Summary Banner */}
               <div className="flex justify-between">
                 <p>
@@ -75,7 +85,7 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
             <div className="flex h-full">
               <Expand type="vertical" in={showExtra}>
                 <div className="w-full bg-gray-100">
-                  <div className="pl-4 pr-2 pb-2 ">
+                  <div className="pl-4 pr-2 pb-3 ">
                     <HorizontalRule className="pb-2" />
                     {SummaryInfo.map((item, i) => (
                       <div key={i} className="w-full flex justify-between">

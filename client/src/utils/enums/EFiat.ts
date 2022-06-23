@@ -1,3 +1,6 @@
+/*
+ * Enum defintions for all fiat currency symbols.
+ */
 export enum EFiat {
   // AUD = 'AUD',
   GBP = 'GBP',
@@ -10,6 +13,9 @@ export enum EFiat {
   // RUB = 'RUB',
 }
 
+/*
+ * Map of symbols with the fiat currency names.
+ */
 export const Fiat: { [key in EFiat]: string } = {
   // [EFiat.AUD]: 'Australia Dollar',
   [EFiat.GBP]: 'Great Britain Pound',

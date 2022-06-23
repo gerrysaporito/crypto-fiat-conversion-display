@@ -7,6 +7,10 @@ interface IExpand {
   onChangeFn?: () => void;
   children: React.ReactNode | React.ReactNode[];
 }
+
+/*
+ * React animation component used to show an expanding sub-component.
+ */
 export const Expand: React.FC<IExpand> = (props) => {
   const { type = 'vertical', in: _in, onChangeFn, padding } = props;
 

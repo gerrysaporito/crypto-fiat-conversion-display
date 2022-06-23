@@ -1,3 +1,6 @@
+/*
+ * Enum defintions for all crypto tickers.
+ */
 export enum ECrypto {
   // AUR = 'AUR',
   // BCH = 'BCH',
@@ -23,6 +26,9 @@ export enum ECrypto {
   // XRP = 'XRP',
 }
 
+/*
+ * Map of tickers with the crypto names.
+ */
 export const Crypto: { [key in ECrypto]: string } = {
   // [ECrypto.AUR]: 'Auroracoin',
   // [ECrypto.BCH]: 'Bitcoin Cash',

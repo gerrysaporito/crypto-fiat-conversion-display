@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { IError } from '../utils/types/IError';
 
 interface IRequest<T> {
   url: string;
@@ -9,11 +8,15 @@ interface IRequest<T> {
   onSuccess?: (data: T) => void;
 }
 
+/*
+ * Hook which standardizes api calls.
+ * Also handles errors if present which can be displayed to the user.
+ */
 export function useRequest<T>({ url, method, body, onSuccess }: IRequest<T>) {
   /*
-   * Local errors from axios request
+   * State variables.
    */
-  const [_errors, set_Errors] = useState<React.ReactNode | null>(null);
+  const [_errors, set_Errors] = useState<React.ReactNode | null>(null); // Local errors from api interface (axios)
 
   /*
    * Hook to make a request to the API.

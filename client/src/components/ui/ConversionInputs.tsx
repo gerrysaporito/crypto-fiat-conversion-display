@@ -1,12 +1,9 @@
+import { Caret } from './Caret';
 import { useDrawer } from '../../hooks/useDrawer';
 import { ECrypto, Crypto } from '../../utils/enums/ECrypto';
 import { EFiat, Fiat } from '../../utils/enums/EFiat';
 import { Conversion } from '../../utils/utility/Conversion';
-import { Caret } from './Caret';
 
-/*
- * A single input row on the conversion display
- */
 interface ConversionInput {
   description: string;
   drawerTitle: string;
@@ -19,6 +16,11 @@ interface ConversionInput {
     React.SetStateAction<'baseAmount' | 'desiredAmount'>
   >;
 }
+
+/*
+ * A single input row on the conversion display.
+ * Uses the useDrawer hook to display dropdown options for a specific state.
+ */
 export const ConversionInput: React.FC<ConversionInput> = ({
   description,
   drawerTitle,
@@ -29,13 +31,13 @@ export const ConversionInput: React.FC<ConversionInput> = ({
   setLastUpdated,
   lastUpdated,
 }) => {
+  const placeholderAmount = Conversion.isFiat(selectedCurrency) ? '100' : '0.1';
   const currencies = Object.keys(
     Conversion.isFiat(selectedCurrency) ? EFiat : ECrypto
   );
-  const placeholderAmount = Conversion.isFiat(selectedCurrency) ? '100' : '0.1';
 
   /*
-   * Drawer with options for specific input element.
+   * Drawer with options for dropdown.
    */
   const { drawer, onClickUpdateShowDrawer } = useDrawer<EFiat | ECrypto>({
     title: drawerTitle,
@@ -46,8 +48,9 @@ export const ConversionInput: React.FC<ConversionInput> = ({
     optionKeys: currencies as unknown as (EFiat | ECrypto)[],
     optionMap: { ...Fiat, ...Crypto },
   });
+
   /*
-   * Event handler to update monetary amount to show.
+   * Event handler to update monetary amount displayed to the user.
    */
   const onChangeUpdateAmount: React.ChangeEventHandler<HTMLInputElement> = (
     event
@@ -57,23 +60,12 @@ export const ConversionInput: React.FC<ConversionInput> = ({
     let value = event.target.value;
     const decimals = value.split('.')[1];
 
-    // if (!!!+value || parseFloat(value) <= 0) return; // Check if negative or invalid number
+    if (!!!+value || parseFloat(value) <= 0) return; // Check if negative or invalid number
     if (Conversion.isFiat(selectedCurrency) && decimals?.length > 2) return;
     if (Conversion.isCrypto(selectedCurrency) && decimals?.length > 5) return;
 
     setLastUpdated(lastUpdated);
     setAmount(value);
-  };
-
-  /*
-   * Event handler to update the currency to show.
-   */
-  const onChangeUpdateCurrency: React.ChangeEventHandler<HTMLSelectElement> = (
-    event
-  ) => {
-    event.preventDefault();
-    event.persist();
-    const value = event.target.value as EFiat | ECrypto;
   };
 
   return (
@@ -91,6 +83,7 @@ export const ConversionInput: React.FC<ConversionInput> = ({
               'w-full col-span-5',
               'px-4 py-2 rounded-l-lg',
               'bg-gray-100 text-black',
+              'text-sm sm:text-base',
             ].join(' ')}
           />
           <button
@@ -99,6 +92,7 @@ export const ConversionInput: React.FC<ConversionInput> = ({
               'w-full col-span-2 flex justify-between items-center',
               'rounded-r-lg pl-4 pr-2 py-2',
               'bg-[#EDEDEF] text-black',
+              'text-sm sm:text-base',
             ].join(' ')}
           >
             {selectedCurrency}

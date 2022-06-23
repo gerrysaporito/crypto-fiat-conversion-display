@@ -1,6 +1,9 @@
 export class Cleaning {
   constructor() {}
 
+  /*
+   * Formats a value to display to the user.
+   */
   static cleanStringAmount = (amount: string): string => {
     const _amount = parseFloat(amount).toString();
     const whole = _amount.split('.')[0];

@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "clean": "rm -rf node_modules .next && npm install && npm run build",
     "lint": "next lint",
     "test": "jest --watch",
     "test:prod": "jest"

@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { Expand } from '../animations/Expand';
-import { Caret } from './Caret';
-
-import CLOSE_ICON_SRC from '../../assets/icons/white-close.png';
 import Image from 'next/image';
+import React, { useState } from 'react';
+import { Caret } from './Caret';
+import { Expand } from '../animations/Expand';
+import CLOSE_ICON_SRC from '../../assets/icons/white-close.png';
 
 interface IDrawer {
   title: string;
@@ -15,6 +14,11 @@ interface IDrawer {
   optionMap?: any;
 }
 
+/*
+ * React component that creates the "select dropdown" drawer.
+ * Should only be used with through the useDrawer hook.
+ * Provides the ability to search through options and update states when selected.
+ */
 export const Drawer: React.FC<IDrawer> = ({
   title,
   showDrawer,
@@ -24,12 +28,15 @@ export const Drawer: React.FC<IDrawer> = ({
   optionKeys,
   optionMap,
 }) => {
-  // if (!showDrawer) return <></>;
+  /*
+   * State variables.
+   */
+
   const [search, setSearch] = useState('');
   const [searchOptions, setSearchOptions] = useState(optionKeys);
 
   /*
-   * Event handler for updating the state for the items in this dropdown.
+   * Event handler for updating the state using the items in this dropdown.
    */
   const onClickUpdateState =
     (item: any): React.MouseEventHandler<HTMLButtonElement> =>

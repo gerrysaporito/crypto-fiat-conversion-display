@@ -1,7 +1,7 @@
 import '../styles/globals.scss';
+import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import React from 'react';
-import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';
 
 // Necessary for Next.js to Render React 18
 const { toast, ToastContainer } = createStandaloneToast();

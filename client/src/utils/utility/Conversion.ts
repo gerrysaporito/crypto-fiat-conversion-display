@@ -5,6 +5,9 @@ import { IExchangeRate } from '../types/IExchangeRate';
 export class Conversion {
   constructor() {}
 
+  /*
+   * Checks if a currency is valid within this app.
+   */
   static isValidCurrencySymbol(currency: string): boolean {
     const symbols = new Set([
       ...Object.keys(EFiat).map((item) => item.toLowerCase()),
@@ -13,6 +16,9 @@ export class Conversion {
     return symbols.has(currency.toLowerCase());
   }
 
+  /*
+   * Checks if a currency is a valid fiat currency within this app.
+   */
   static isFiat(currency: string): boolean {
     const symbols = new Set(
       Object.keys(EFiat).map((item) => item.toLowerCase())
@@ -20,6 +26,9 @@ export class Conversion {
     return symbols.has(currency.toLowerCase());
   }
 
+  /*
+   * Checks if a currency is a valid crypto currency within this app.
+   */
   static isCrypto(currency: string): boolean {
     const symbols = new Set(
       Object.keys(ECrypto).map((item) => item.toLowerCase())
@@ -27,6 +36,9 @@ export class Conversion {
     return symbols.has(currency.toLowerCase());
   }
 
+  /*
+   * Returns the desired amount using the base amount, exchange rate and exchange direction.
+   */
   static getExchangedAmount({
     exchangeRate,
     amount,
