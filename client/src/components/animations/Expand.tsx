@@ -3,21 +3,22 @@ import { CSSTransition } from 'react-transition-group';
 interface IExpand {
   in: boolean;
   type?: 'vertical' | 'horizontal';
+  padding?: boolean;
   onChangeFn?: () => void;
   children: React.ReactNode | React.ReactNode[];
 }
 export const Expand: React.FC<IExpand> = (props) => {
-  const { type = 'vertical', in: _in, onChangeFn } = props;
+  const { type = 'vertical', in: _in, onChangeFn, padding } = props;
 
-  const classNames = [];
+  const className = [];
 
   switch (type) {
     case 'vertical': {
-      classNames.push('expand-vertical');
+      className.push(`expand-vertical${padding ? '-padding' : ''}`);
       break;
     }
     case 'horizontal': {
-      classNames.push('expand-horizontal');
+      className.push(`expand-horizontal${padding ? '-padding' : ''}`);
       break;
     }
     default: {
@@ -28,14 +29,14 @@ export const Expand: React.FC<IExpand> = (props) => {
   return (
     <CSSTransition
       in={_in}
-      timeout={1000}
+      timeout={padding ? 700 : 500}
       onEnter={() => {
         if (onChangeFn) onChangeFn();
       }}
       onExit={() => {
         if (onChangeFn) onChangeFn();
       }}
-      classNames={classNames.join(' ')}
+      classNames={className.join(' ')}
       unmountOnExit
     >
       {props.children}

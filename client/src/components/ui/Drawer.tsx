@@ -49,9 +49,9 @@ export const Drawer: React.FC<IDrawer> = ({
         item.toLowerCase().includes(value.toLowerCase()) ||
         (optionMap &&
           item in optionMap &&
-          optionMap[item.toLowerCase()]
-            .toLowerCase()
-            .includes(value.toLowerCase()))
+          optionMap[item.toUpperCase()]
+            ?.toLowerCase()
+            ?.includes(value.toLowerCase()))
     );
 
     setSearch(value);
@@ -59,13 +59,13 @@ export const Drawer: React.FC<IDrawer> = ({
   };
 
   return (
-    <Expand in={showDrawer}>
+    <Expand in={showDrawer} padding>
       <div
         className={[
           'w-full h-full absolute bottom-0 right-0',
           'rounded-2xl px-10 py-10',
         ].join(' ')}
-        style={{ backgroundColor: 'lightblue' }}
+        style={{ backgroundColor: '#111111', color: 'white' }}
       >
         <div className="w-full h-full flex flex-col overflow-y-scroll hide-scroll-bar">
           {/* Title row */}
@@ -85,7 +85,7 @@ export const Drawer: React.FC<IDrawer> = ({
             className={[
               'w-full',
               'px-4 py-2 my-4 rounded-lg',
-              'bg-gray-100',
+              'bg-gray-100 text-black',
             ].join(' ')}
           />
 

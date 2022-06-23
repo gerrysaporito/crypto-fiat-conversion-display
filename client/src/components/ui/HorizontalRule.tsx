@@ -11,6 +11,7 @@ export const HorizontalRule: React.FC<IHorizontalRule> = ({
       className={[
         'w-full',
         'border-t outline-3 border-gray-400',
+        'overflow-y-scroll hide-scroll-bar',
         className,
       ].join(' ')}
     />

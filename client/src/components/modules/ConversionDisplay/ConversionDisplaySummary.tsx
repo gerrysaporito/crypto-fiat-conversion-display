@@ -4,6 +4,7 @@ import { ECrypto } from '../../../utils/enums/ECrypto';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Cleaning } from '../../../utils/utility/Cleaning';
+import { Expand } from '../../animations/Expand';
 import { Caret } from '../../ui/Caret';
 import { HorizontalRule } from '../../ui/HorizontalRule';
 
@@ -35,8 +36,13 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
   const showSummary = !!baseAmount && !!desiredAmount;
   const SummaryInfo = getSummaryInfo(props);
 
+  const onCaretClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    event.preventDefault;
+    setShowExtra((prev) => !prev);
+  };
+
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       <div className="flex justify-between pb-2">
         <p>{showSummary && 'Summary'}</p>
         <div className="flex">
@@ -48,23 +54,45 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
 
       {/* Card */}
       {showSummary && (
-        <div className="rounded-lg bg-gray-100 px-4 pb-2 pt-3">
-          <SummaryBanner
-            setShowExtra={setShowExtra}
-            showExtra={showExtra}
-            {...props}
-          />
-          {showExtra && (
-            <div>
-              <HorizontalRule className="mt-1 mb-2" />
-              {SummaryInfo.map((item, i) => (
-                <div key={i} className="flex justify-between">
-                  <p>{item[0]}</p>
-                  <p>{item[1]}</p>
-                </div>
-              ))}
+        <div className="h-[80px] text-black flex flex-col rounded-b-lg">
+          <div className="rounded-lg overflow-hidden">
+            <div className="pl-4 pr-2 pb-2 pt-3 bg-gray-100">
+              {/* Summary Banner */}
+              <div className="flex justify-between">
+                <p>
+                  You get{' '}
+                  <span className="font-bold tabular-nums">
+                    {Cleaning.cleanStringAmount(desiredAmount)}{' '}
+                    {desiredCurrency}
+                  </span>{' '}
+                  for{' '}
+                  <span className="font-bold tabular-nums">
+                    {Cleaning.cleanStringAmount(baseAmount)} {baseCurrency}
+                  </span>
+                </p>
+                <button onClick={onCaretClick}>
+                  <Caret type={showExtra ? 'up' : 'down'} />
+                </button>
+              </div>
             </div>
-          )}
+
+            {/* Drawer */}
+            <div className="flex h-full">
+              <Expand type="vertical" in={showExtra}>
+                <div className="w-full bg-gray-100">
+                  <div className="pl-4 pr-2 pb-2 ">
+                    <HorizontalRule className="pb-2" />
+                    {SummaryInfo.map((item, i) => (
+                      <div key={i} className="w-full flex justify-between">
+                        <p>{item[0]}</p>
+                        <p>{item[1]}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Expand>
+            </div>
+          </div>
         </div>
       )}
       {!showSummary && (
@@ -72,46 +100,6 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
           Please update value to be a non-0 integer
         </span>
       )}
-    </div>
-  );
-};
-
-interface ISummaryBanner {
-  baseAmount: string;
-  baseCurrency: EFiat | ECrypto;
-  desiredAmount: string;
-  desiredCurrency: EFiat | ECrypto;
-  setShowExtra: React.Dispatch<React.SetStateAction<boolean>>;
-  showExtra: boolean;
-}
-const SummaryBanner: React.FC<ISummaryBanner> = ({
-  baseAmount,
-  baseCurrency,
-  desiredAmount,
-  desiredCurrency,
-  setShowExtra,
-  showExtra,
-}) => {
-  const onCaretClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-    event.preventDefault;
-    setShowExtra((prev) => !prev);
-  };
-
-  return (
-    <div className="flex justify-between">
-      <p>
-        You get{' '}
-        <span className="font-bold tabular-nums">
-          {Cleaning.cleanStringAmount(desiredAmount)} {desiredCurrency}
-        </span>{' '}
-        for{' '}
-        <span className="font-bold tabular-nums">
-          {Cleaning.cleanStringAmount(baseAmount)} {baseCurrency}
-        </span>
-      </p>
-      <button onClick={onCaretClick}>
-        <Caret type={showExtra ? 'up' : 'down'} />
-      </button>
     </div>
   );
 };
@@ -125,7 +113,7 @@ const getSummaryInfo = ({
   exchangeRate,
 }: Partial<IConversionDisplaySummary>) => [
   [
-    'Rate:',
+    <span className="font-bold">Rate:</span>,
     `1 ${exchangeRate?.desired} = $${Cleaning.cleanStringAmount(
       (1 / (exchangeRate?.rate || Infinity)).toFixed(2).toString() || ''
     )} ${exchangeRate?.base}`,

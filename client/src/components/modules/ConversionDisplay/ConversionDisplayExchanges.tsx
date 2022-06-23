@@ -24,7 +24,8 @@ export const ConversionDisplayExchanges: React.FC<
     <div className="w-full overflow-x-scroll hide-scroll-bar">
       <button onClick={onClickUpdateShowDrawer}>
         <h2 className="text-2xl font-semibold flex items-between">
-          Quotes from {EExchange[selectedExchange as keyof typeof EExchange]}{' '}
+          Quotes from{' '}
+          {EExchange[selectedExchange.toUpperCase() as keyof typeof EExchange]}{' '}
           <Caret type="down" width={30} className="mt-1" />
         </h2>
       </button>

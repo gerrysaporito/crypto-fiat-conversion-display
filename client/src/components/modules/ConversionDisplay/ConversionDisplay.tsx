@@ -147,22 +147,15 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     updateExchangeRate();
   }
 
-  useEffect(() => {
-    // console.log(baseCurrency, baseAmount);
-    // console.log(desiredCurrency, desiredAmount);
-    // console.log('lastUpdated', lastUpdated);
-    // console.log(exchangeRate);
-    // console.log(lastUpdated);
-  }, [lastUpdated, exchangeRate]);
-
   return (
     <div
       className={[
         'relative w-full max-w-sm',
         'rounded-2xl overflow-hidden',
         'text-sm',
+        'shadow-md',
       ].join(' ')}
-      style={{ backgroundColor: 'lightblue' }}
+      style={{ backgroundColor: '#111111', color: 'white' }}
     >
       <div className={['mx-10 my-10', 'grid grid-cols-1 gap-5'].join(' ')}>
         <ConversionDisplayExchanges
