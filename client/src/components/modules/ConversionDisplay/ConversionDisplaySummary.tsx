@@ -8,11 +8,6 @@ import { Expand } from '../../animations/Expand';
 import { Caret } from '../../ui/Caret';
 import { HorizontalRule } from '../../ui/HorizontalRule';
 
-const DOWN_CARET_SRC =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Caret_down_font_awesome.svg/512px-Caret_down_font_awesome.svg.png?20130126203221';
-const UP_CARET_SRC =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Caret_up_font_awesome.svg/512px-Caret_up_font_awesome.svg.png?20130126203252';
-
 interface IConversionDisplaySummary {
   exchangeRate: IExchangeRate | null;
   baseAmount: string;
@@ -32,7 +27,7 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
     baseCurrency,
     exchangeRate,
   } = props;
-  const [showExtra, setShowExtra] = useState(true);
+  const [showExtra, setShowExtra] = useState(false);
   const showSummary = !!baseAmount && !!desiredAmount;
   const SummaryInfo = getSummaryInfo(props);
 

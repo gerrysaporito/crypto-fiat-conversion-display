@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Expand } from '../animations/Expand';
 import { Caret } from './Caret';
 
+import CLOSE_ICON_SRC from '../../assets/icons/white-close.png';
+import Image from 'next/image';
+
 interface IDrawer {
   title: string;
   showDrawer: boolean;
@@ -62,7 +65,7 @@ export const Drawer: React.FC<IDrawer> = ({
     <Expand in={showDrawer} padding>
       <div
         className={[
-          'w-full h-full absolute bottom-0 right-0',
+          'w-full h-full absolute bottom-0 right-0 z-10',
           'rounded-2xl px-10 py-10',
         ].join(' ')}
         style={{ backgroundColor: '#111111', color: 'white' }}
@@ -72,7 +75,12 @@ export const Drawer: React.FC<IDrawer> = ({
           <div className="flex justify-between items-center">
             <h2 className="text-xl">{title}</h2>
             <button onClick={onClickUpdateShowDrawer} className="text-xl">
-              x
+              <Image
+                src={CLOSE_ICON_SRC}
+                alt="close icon"
+                width="24px"
+                height="24px"
+              />
             </button>
           </div>
 
@@ -96,20 +104,20 @@ export const Drawer: React.FC<IDrawer> = ({
                 'w-full h-full',
                 'absolute top-0 right-0',
                 'flex flex-col',
-                'overflow-y-auto round-scroll-bar',
+                'round-scroll-bar overflow-y-auto', // Show scrollbar here
               ].join(' ')}
             >
               {searchOptions.map((item, i) => (
                 <button
                   key={i}
                   onClick={onClickUpdateState(item)}
-                  className="w-full pt-2 pb-3 text-left flex justify-between"
+                  className="w-full pt-2 pb-3 text-left flex justify-between items-center"
                 >
-                  <span>
+                  <span className="w-full">
                     <span className="font-bold">{item}</span>{' '}
                     {optionMap && ` - ${optionMap[item]}`}
                   </span>
-                  <Caret type="right" />
+                  <Caret type="right" theme="light" />
                 </button>
               ))}
             </div>

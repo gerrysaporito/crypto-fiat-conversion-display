@@ -1,32 +1,48 @@
-const DOWN_CARET_SRC = 'https://www.svgrepo.com/show/315098/caret-down.svg';
-const UP_CARET_SRC = 'https://www.svgrepo.com/show/315106/caret-up.svg';
-const RIGHT_CARET_SRC = 'https://www.svgrepo.com/show/315104/caret-right.svg';
-const LEFT_CARET_SRC = 'https://www.svgrepo.com/show/315101/caret-left.svg';
+import Image, { StaticImageData } from 'next/image';
+import DARK_DOWN_CARET_SRC from '../../assets/icons/black-chevron-down.png';
+import DARK_UP_CARET_SRC from '../../assets/icons/black-chevron-up.png';
+import DARK_RIGHT_CARET_SRC from '../../assets/icons/black-chevron-right.png';
+import DARK_LEFT_CARET_SRC from '../../assets/icons/black-chevron-left.png';
+import LIGHT_DOWN_CARET_SRC from '../../assets/icons/white-chevron-down.png';
+import LIGHT_UP_CARET_SRC from '../../assets/icons/white-chevron-up.png';
+import LIGHT_RIGHT_CARET_SRC from '../../assets/icons/white-chevron-right.png';
+import LIGHT_LEFT_CARET_SRC from '../../assets/icons/white-chevron-left.png';
 
 interface ICaret {
   type: 'up' | 'down' | 'right' | 'left';
+  theme?: 'dark' | 'light';
   width?: number;
   height?: number;
   className?: string;
 }
-export const Caret: React.FC<ICaret> = ({ type, width, height, className }) => {
-  let src = '';
+export const Caret: React.FC<ICaret> = ({
+  type,
+  width,
+  height,
+  theme = 'dark',
+  className,
+}) => {
+  let src: StaticImageData | null = null;
 
   switch (type) {
     case 'up': {
-      src = UP_CARET_SRC;
+      if (theme === 'dark') src = DARK_UP_CARET_SRC;
+      else src = LIGHT_UP_CARET_SRC;
       break;
     }
     case 'down': {
-      src = DOWN_CARET_SRC;
+      if (theme === 'dark') src = DARK_DOWN_CARET_SRC;
+      else src = LIGHT_DOWN_CARET_SRC;
       break;
     }
     case 'right': {
-      src = RIGHT_CARET_SRC;
+      if (theme === 'dark') src = DARK_RIGHT_CARET_SRC;
+      else src = LIGHT_RIGHT_CARET_SRC;
       break;
     }
     case 'left': {
-      src = LEFT_CARET_SRC;
+      if (theme === 'dark') src = DARK_LEFT_CARET_SRC;
+      else src = LIGHT_LEFT_CARET_SRC;
       break;
     }
     default: {
@@ -35,12 +51,14 @@ export const Caret: React.FC<ICaret> = ({ type, width, height, className }) => {
   }
 
   return (
-    <img
-      src={src}
-      alt={`Caret ${type} icon.`}
-      width={`${width || '22'}px`}
-      height={`${height || '22'}px`}
-      className={className}
-    />
+    <span className="w-5 h-4">
+      <Image
+        src={src}
+        alt={`Caret ${type} icon.`}
+        width={`${width || '14'}px`}
+        height={`${height || '14'}px`}
+        className={className}
+      />
+    </span>
   );
 };
