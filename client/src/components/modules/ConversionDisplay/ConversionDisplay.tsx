@@ -134,7 +134,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     return () => {
       clearInterval(timer);
     };
-  }, [exchange, baseCurrency, desiredCurrency]);
+  }, [exchange, baseCurrency, desiredCurrency, _cooldown]);
 
   /*
    * Update data whenver amounts or exchange rates change

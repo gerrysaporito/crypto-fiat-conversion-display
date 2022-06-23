@@ -108,7 +108,9 @@ const getSummaryInfo = ({
   exchangeRate,
 }: Partial<IConversionDisplaySummary>) => [
   [
-    <span className="font-bold">Rate:</span>,
+    <span key={1} className="font-bold">
+      Rate:
+    </span>,
     `1 ${exchangeRate?.desired} = $${Cleaning.cleanStringAmount(
       (1 / (exchangeRate?.rate || Infinity)).toFixed(2).toString() || ''
     )} ${exchangeRate?.base}`,
