@@ -60,6 +60,15 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     url: `/api/v1/ftx/exchange-rate?base=${baseCurrency}&desired=${desiredCurrency}`,
     method: 'get',
   });
+
+  /*
+   * Clear errors whenever exchange changes, causing entire app to update.
+   */
+  useEffect(() => {
+    coinbaseSetError('');
+    ftxSetError('');
+  }, [exchange]);
+
   const error = coinbaseError || ftxError;
 
   /*
@@ -173,14 +182,6 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
     updateAmounts();
     if (timeLeft === 0 && !!!error) updateExchangeRate();
   }, [timeLeft, error]);
-
-  /*
-   * Clear errors whenever exchange changes, causing entire app to update.
-   */
-  useEffect(() => {
-    coinbaseSetError('');
-    ftxSetError('');
-  }, [exchange]);
 
   return (
     <div
