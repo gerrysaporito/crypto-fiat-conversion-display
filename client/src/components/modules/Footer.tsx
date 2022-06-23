@@ -5,8 +5,10 @@ export const Footer: React.FC = () => {
   return (
     <footer className="w-full px-8 sm:px-20 py-10 sm:py-20 bg-[#111111] text-white">
       <div className="grid grid-cols-1 gap-4">
-        <p>Made with 💜 by @GentleTengu from Canada 🇨🇦</p>
-        <div className="flex">
+        <p className="text-center sm:text-left">
+          Made with 💜 by @GentleTengu from Canada 🇨🇦
+        </p>
+        <div className="flex justify-center sm:justify-start">
           <a
             href="https://twitter.com/gentletengu"
             target="_blank"
