@@ -21,7 +21,7 @@ interface IConversionDisplay {
 export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   cooldown,
 }) => {
-  const _cooldown = cooldown || 10;
+  const _cooldown = cooldown || 20;
 
   /*
    * State variables.
