@@ -89,13 +89,15 @@ export const ConversionInput: React.FC<ConversionInput> = ({
             onClick={onClickUpdateShowDrawer}
             className={[
               'w-full col-span-2 flex justify-between items-center',
-              'rounded-r-lg pl-4 pr-2 py-2',
+              'rounded-r-lg pl-4 pr-2 pt-2 pb-2',
               'bg-[#EDEDEF] text-black',
               'text-sm sm:text-base',
             ].join(' ')}
           >
             {selectedCurrency}
-            <Caret type="down" />
+            <span className="h-full flex items-center">
+              <Caret type="down" />
+            </span>
           </button>
         </div>
       </div>
