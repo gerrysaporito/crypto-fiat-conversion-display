@@ -49,9 +49,9 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
 
       {/* Card */}
       {showSummary && (
-        <div className="h-[80px] text-black flex flex-col rounded-b-lg">
+        <div className="h-[85px] text-black flex flex-col rounded-b-lg">
           <div className="rounded-lg overflow-hidden">
-            <div className="pl-4 pr-2 pb-2 pt-3 bg-gray-100">
+            <div className="pl-4 pr-2 pb-3 pt-3 bg-gray-100">
               {/* Summary Banner */}
               <div className="flex justify-between">
                 <p>
@@ -75,7 +75,7 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
             <div className="flex h-full">
               <Expand type="vertical" in={showExtra}>
                 <div className="w-full bg-gray-100">
-                  <div className="pl-4 pr-2 pb-2 ">
+                  <div className="pl-4 pr-2 pb-3 ">
                     <HorizontalRule className="pb-2" />
                     {SummaryInfo.map((item, i) => (
                       <div key={i} className="w-full flex justify-between">

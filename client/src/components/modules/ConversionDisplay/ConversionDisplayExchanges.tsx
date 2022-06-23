@@ -26,7 +26,13 @@ export const ConversionDisplayExchanges: React.FC<
         <h2 className="text-2xl font-semibold flex items-between">
           Quotes from{' '}
           {EExchange[selectedExchange.toUpperCase() as keyof typeof EExchange]}{' '}
-          <Caret type="down" width={30} className="mt-1" />
+          <Caret
+            type="down"
+            theme="light"
+            width={30}
+            height={30}
+            className="mt-1 ml-3"
+          />
         </h2>
       </button>
       {drawer}

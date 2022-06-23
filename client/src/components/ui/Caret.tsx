@@ -51,13 +51,12 @@ export const Caret: React.FC<ICaret> = ({
   }
 
   return (
-    <span className="w-5 h-4">
+    <span className={`w-5 h-4 ${className}`}>
       <Image
         src={src}
         alt={`Caret ${type} icon.`}
         width={`${width || '14'}px`}
         height={`${height || '14'}px`}
-        className={className}
       />
     </span>
   );
