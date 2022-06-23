@@ -1,4 +1,8 @@
 import Image, { StaticImageData } from 'next/image';
+
+/*
+ * Loaded caret images.
+ */
 import DARK_DOWN_CARET_SRC from '../../assets/icons/black-chevron-down.png';
 import DARK_UP_CARET_SRC from '../../assets/icons/black-chevron-up.png';
 import DARK_RIGHT_CARET_SRC from '../../assets/icons/black-chevron-right.png';
@@ -15,6 +19,11 @@ interface ICaret {
   height?: number;
   className?: string;
 }
+
+/*
+ * React component to display an image of a caret/chevron (arrow).
+ * Used as an icon.
+ */
 export const Caret: React.FC<ICaret> = ({
   type,
   width,
@@ -24,6 +33,9 @@ export const Caret: React.FC<ICaret> = ({
 }) => {
   let src: StaticImageData | null = null;
 
+  /*
+   * "Sieve" (fine-mesh strainer) to select the appropriate image.
+   */
   switch (type) {
     case 'up': {
       if (theme === 'dark') src = DARK_UP_CARET_SRC;

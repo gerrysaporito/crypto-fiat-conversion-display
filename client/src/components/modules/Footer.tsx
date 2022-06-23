@@ -1,6 +1,9 @@
 import { Button } from '@chakra-ui/react';
 import { FaTwitter, FaGithub, FaLinkedin } from 'react-icons/fa';
 
+/*
+ * React component used to display information about the developer.
+ */
 export const Footer: React.FC = () => {
   return (
     <footer className="w-full px-8 sm:px-20 py-10 sm:py-20 bg-[#111111] text-white">

@@ -1,11 +1,11 @@
 interface IHorizontalRule {
-  width?: 'full';
   className?: string;
 }
-export const HorizontalRule: React.FC<IHorizontalRule> = ({
-  width,
-  className,
-}) => {
+
+/*
+ * React component which displays a "Horizontal Rule" on the page.
+ */
+export const HorizontalRule: React.FC<IHorizontalRule> = ({ className }) => {
   return (
     <div
       className={[

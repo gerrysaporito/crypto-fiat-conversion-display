@@ -1,8 +1,9 @@
+import { Conversion } from '../Conversion';
 import { ECrypto } from '../../enums/ECrypto';
 import { EFiat } from '../../enums/EFiat';
-import { Conversion } from '../Conversion';
+
 /*
- * To use the mock stripe, remove the .old extension on the stripe.ts file in the __mocks__ folder.
+ * Tests for the Conversion utility class
  */
 describe(`Tests Conversion utility class' static functions`, () => {
   it('tests isValidCurrencySymbol edge cases', async () => {

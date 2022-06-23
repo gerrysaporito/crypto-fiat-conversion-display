@@ -8,16 +8,24 @@ interface IDrawer<T> {
   optionMap?: { [key: string]: string };
 }
 
+/*
+ * Hook which is used to standardize the creation of the expandable drawer.
+ * Can be used in any component within the module.
+ * Also provides a button event handler to update the visibility state of the drawer.
+ */
 export function useDrawer<T>({
   title,
   onClickFn,
   optionKeys,
   optionMap,
 }: IDrawer<T>) {
+  /*
+   * State variables.
+   */
   const [showDrawer, setShowDrawer] = useState(false);
 
   /*
-   * Event handler to set state of the drawer's visibility
+   * Event handler to set state of the drawer's visibility.
    */
   const onClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();

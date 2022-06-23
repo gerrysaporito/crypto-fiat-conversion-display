@@ -1,17 +1,24 @@
+import { Caret } from '../../ui/Caret';
 import { useDrawer } from '../../../hooks/useDrawer';
 import { EExchange } from '../../../utils/enums/EExchange';
-import { Caret } from '../../ui/Caret';
 
 interface IConversionDisplayExchanges {
   selectedExchange: EExchange;
   setExchange: React.Dispatch<React.SetStateAction<EExchange>>;
 }
 
+/*
+ * React component that displays and handles the exchange information.
+ * Displays Exchange and contains button to open up exchange drawer.
+ */
 export const ConversionDisplayExchanges: React.FC<
   IConversionDisplayExchanges
 > = ({ selectedExchange, setExchange }) => {
   const exchanges = Object.keys(EExchange).map((item) => item.toUpperCase());
 
+  /*
+   * Drawer with list of exchanges as dropdown options.
+   */
   const { drawer, onClickUpdateShowDrawer } = useDrawer<EExchange>({
     title: 'Select an exchange',
     onClickFn: (item: EExchange) => {

@@ -1,7 +1,7 @@
 import { Cleaning } from '../Cleaning';
 
 /*
- * To use the mock stripe, remove the .old extension on the stripe.ts file in the __mocks__ folder.
+ * Tests for Cleaning utility class.
  */
 describe(`Tests Cleaning utility class' static functions`, () => {
   it('tests cleanStringAmount edge cases', async () => {

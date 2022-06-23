@@ -1,12 +1,11 @@
-import Image from 'next/image';
 import React, { useState } from 'react';
+import { Expand } from '../../animations/Expand';
+import { Caret } from '../../ui/Caret';
+import { HorizontalRule } from '../../ui/HorizontalRule';
 import { ECrypto } from '../../../utils/enums/ECrypto';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Cleaning } from '../../../utils/utility/Cleaning';
-import { Expand } from '../../animations/Expand';
-import { Caret } from '../../ui/Caret';
-import { HorizontalRule } from '../../ui/HorizontalRule';
 
 interface IConversionDisplaySummary {
   exchangeRate: IExchangeRate | null;
@@ -16,6 +15,10 @@ interface IConversionDisplaySummary {
   desiredCurrency: EFiat | ECrypto;
   timeLeft: number;
 }
+
+/*
+ * React component that displays summary of information for the current conversion.
+ */
 export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
   props
 ) => {
@@ -27,10 +30,17 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
     baseCurrency,
     exchangeRate,
   } = props;
-  const [showExtra, setShowExtra] = useState(false);
   const showSummary = !!baseAmount && !!desiredAmount;
   const SummaryInfo = getSummaryInfo(props);
 
+  /*
+   * State variables.
+   */
+  const [showExtra, setShowExtra] = useState(false);
+
+  /*
+   * Event handler to display the hidden info box.
+   */
   const onCaretClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault;
     setShowExtra((prev) => !prev);

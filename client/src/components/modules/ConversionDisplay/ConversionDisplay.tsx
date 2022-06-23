@@ -1,25 +1,30 @@
 import React, { useEffect, useState } from 'react';
+import { ConversionDisplayExchanges } from './ConversionDisplayExchanges';
+import { ConversionDisplaySummary } from './ConversionDisplaySummary';
+import { ConversionInput } from '../../ui/ConversionInputs';
 import { useRequest } from '../../../hooks/useRequest';
 import { ECrypto } from '../../../utils/enums/ECrypto';
 import { EExchange } from '../../../utils/enums/EExchange';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../utils/utility/Conversion';
-import { ConversionInput } from '../../ui/ConversionInputs';
-import { ConversionDisplayExchanges } from './ConversionDisplayExchanges';
-import { ConversionDisplaySummary } from './ConversionDisplaySummary';
 
 interface IConversionDisplay {
   cooldown?: number; // Seconds
 }
 
+/*
+ * Main react component to display.
+ * Used to handle data, api calls, etc.
+ * Sub-components recieve data from here and handle their respective requirements.
+ */
 export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   cooldown,
 }) => {
   const _cooldown = cooldown || 20;
 
   /*
-   * State Variables
+   * State variables.
    */
   const [timeLeft, setTimeLeft] = useState<number>(_cooldown);
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
@@ -50,6 +55,10 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
       method: 'get',
     });
 
+  /*
+   * Calls the api given the proper exchange api-calling functions.
+   * Also updates the relevent state variables once the data is recieved.
+   */
   const updateExchangeRateData = async (
     callApi: (props?: {}) => Promise<void | IExchangeRate>,
     errors: React.ReactNode
@@ -65,7 +74,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   };
 
   /*
-   * Master function to update exchange rates (based on current state variables)
+   * Calls function to get and update exchange rate data given an exchange.
    */
   const updateExchangeRate = async () => {
     switch (exchange) {
@@ -85,7 +94,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   };
 
   /*
-   * Master function to update amounts displayed on screen (based on current state variables)
+   * Updates state variable amounts while also handling conversion.
    */
   const updateAmounts = async () => {
     if (!exchangeRate) return;
@@ -117,7 +126,8 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   };
 
   /*
-   * Update timer whenever exchange/currencies change or when timer runs out
+   * Hook to start and keep track of countdown timer.
+   * Update timer whenever exchange/currencies change or when timer runs out.
    */
   useEffect(() => {
     updateExchangeRate();
@@ -137,12 +147,16 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   }, [exchange, baseCurrency, desiredCurrency, _cooldown]);
 
   /*
-   * Update data whenver amounts or exchange rates change
+   * Update amount state variables with the data above.
+   * Monitors changes in amounts or exchange rates.
    */
   useEffect(() => {
     updateAmounts();
   }, [lastUpdated, baseAmount, desiredAmount, exchangeRate]);
 
+  /*
+   * Updates exchange rate when time runs out.
+   */
   if (timeLeft === 0) {
     updateExchangeRate();
   }
