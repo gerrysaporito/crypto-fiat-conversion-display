@@ -27,7 +27,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
    * State variables.
    */
   const [timeLeft, setTimeLeft] = useState<number>(_cooldown);
-  const [errors, setErrors] = useState<React.ReactNode | null>(null);
+  const [error, setError] = useState<string>();
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
   const [exchangeRate, setExchangeRate] = useState<IExchangeRate | null>(null);
   const [baseAmount, setBaseAmount] = useState<string>('100');
@@ -43,34 +43,27 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   /*
    * API Requests
    */
-  const { doRequest: callCoinbaseApi, errors: coinbaseErrors } =
+  const { doRequest: callCoinbaseApi, error: coinbaseError } =
     useRequest<IExchangeRate>({
       url: `/api/v1/coinbase/exchange-rate?base=${baseCurrency}&desired=${desiredCurrency}`,
       method: 'get',
     });
 
-  const { doRequest: callFtxApi, errors: ftxErrors } =
-    useRequest<IExchangeRate>({
-      url: `/api/v1/ftx/exchange-rate?base=${baseCurrency}&desired=${desiredCurrency}`,
-      method: 'get',
-    });
+  const { doRequest: callFtxApi, error: ftxError } = useRequest<IExchangeRate>({
+    url: `/api/v1/ftx/exchange-rate?base=${baseCurrency}&desired=${desiredCurrency}`,
+    method: 'get',
+  });
 
   /*
    * Calls the api given the proper exchange api-calling functions.
    * Also updates the relevent state variables once the data is recieved.
    */
   const updateExchangeRateData = async (
-    callApi: (props?: {}) => Promise<void | IExchangeRate>,
-    errors: React.ReactNode
+    callApi: (props?: {}) => Promise<void | IExchangeRate>
   ): Promise<void> => {
     const data = await callApi();
-    if (!data) {
-      const message = 'Could not get new data at this time.';
-      console.error(message);
-      return;
-    }
-    await setExchangeRate(data ? data : null);
-    await setErrors(errors);
+    if (!data) return;
+    setExchangeRate(data ? data : null);
   };
 
   /*
@@ -79,15 +72,15 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   const updateExchangeRate = async () => {
     switch (exchange) {
       case EExchange.COINBASE: {
-        await updateExchangeRateData(callCoinbaseApi, coinbaseErrors);
+        await updateExchangeRateData(callCoinbaseApi);
         break;
       }
       case EExchange.FTX: {
-        await updateExchangeRateData(callFtxApi, ftxErrors);
+        await updateExchangeRateData(callFtxApi);
         break;
       }
       default: {
-        await updateExchangeRateData(callCoinbaseApi, coinbaseErrors);
+        await updateExchangeRateData(callCoinbaseApi);
         break;
       }
     }
@@ -130,6 +123,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
    * Update timer whenever exchange/currencies change or when timer runs out.
    */
   useEffect(() => {
+    setError('');
     updateExchangeRate();
     setTimeLeft(_cooldown);
 
@@ -155,9 +149,17 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   }, [lastUpdated, baseAmount, desiredAmount, exchangeRate]);
 
   /*
+   * Updates error on screen if error occurs during API call.
+   */
+  useEffect(() => {
+    if (ftxError) setError(ftxError);
+    if (coinbaseError) setError(coinbaseError);
+  }, [coinbaseError, ftxError]);
+
+  /*
    * Updates exchange rate when time runs out.
    */
-  if (timeLeft === 0) {
+  if (timeLeft === 0 && !!!error) {
     updateExchangeRate();
   }
 
@@ -204,6 +206,7 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
           exchangeRate={exchangeRate}
           timeLeft={timeLeft}
         />
+        <div className="text-[#FF0000]">{error}</div>
       </div>
     </div>
   );

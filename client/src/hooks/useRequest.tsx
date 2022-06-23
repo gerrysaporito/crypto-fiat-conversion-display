@@ -16,7 +16,7 @@ export function useRequest<T>({ url, method, body, onSuccess }: IRequest<T>) {
   /*
    * State variables.
    */
-  const [_errors, set_Errors] = useState<React.ReactNode | null>(null); // Local errors from api interface (axios)
+  const [_error, set_Error] = useState<string>(''); // Local errors from api interface (axios)
 
   /*
    * Hook to make a request to the API.
@@ -24,7 +24,7 @@ export function useRequest<T>({ url, method, body, onSuccess }: IRequest<T>) {
    */
   const doRequest = async (props = {}): Promise<T | void> => {
     try {
-      // set_Errors(null);
+      // set_Error(null);
       const response = await axios[method]<T>(url, {
         ...body,
         ...props,
@@ -38,27 +38,21 @@ export function useRequest<T>({ url, method, body, onSuccess }: IRequest<T>) {
     } catch (err: any) {
       if (err?.response?.data?.message) {
         console.error(err);
-        set_Errors(
-          <div className="alert alert-danger">
-            <h4>Oops...</h4>
-            <ul className="my-0">
-              <li>{err.response.data.message}</li>
-            </ul>
-          </div>
-        );
+        set_Error(err.response.data.message);
       } else if (err?.response?.data) {
-        console.error(
-          'Something is wrong with the request :(',
-          err.response.data
-        );
+        const message = 'Something went wrong with the API request :(';
+        console.error(message, err.response.data);
+        set_Error(err.response.data.message);
       } else {
-        console.error('Something went wrong :(', err);
+        const message = 'Something went wrong :(';
+        console.error(message, err);
+        set_Error(message);
       }
     }
   };
 
   return {
     doRequest,
-    errors: _errors,
+    error: _error,
   };
 }

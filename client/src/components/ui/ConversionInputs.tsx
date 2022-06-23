@@ -60,7 +60,6 @@ export const ConversionInput: React.FC<ConversionInput> = ({
     let value = event.target.value;
     const decimals = value.split('.')[1];
 
-    if (!!!+value || parseFloat(value) <= 0) return; // Check if negative or invalid number
     if (Conversion.isFiat(selectedCurrency) && decimals?.length > 2) return;
     if (Conversion.isCrypto(selectedCurrency) && decimals?.length > 5) return;
 
