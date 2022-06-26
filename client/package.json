@@ -6,23 +6,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "clean": "rm -rf node_modules .next && npm install && npm run build",
+    "clean": "rm -rf node_modules package-lock.json .next && npm install && npm run build",
     "lint": "next lint",
     "test": "jest --watch",
     "test:prod": "jest"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.2",
     "@chakra-ui/react": "^2.2.1",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
+    "@stripe/react-stripe-js": "^1.9.0",
+    "@stripe/stripe-js": "^1.32.0",
+    "@web3-react/core": "^6.1.9",
     "axios": "^0.27.2",
+    "ethers": "^5.6.9",
     "framer-motion": "^6.3.11",
     "next": "^12.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
     "react-transition-group": "^4.4.2",
-    "sass": "^1.52.3"
+    "sass": "^1.52.3",
+    "web3": "^1.7.4"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

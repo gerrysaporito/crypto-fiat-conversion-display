@@ -27,7 +27,6 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
    * State variables.
    */
   const [timeLeft, setTimeLeft] = useState<number>(_cooldown);
-  // const [error, setError] = useState<string>();
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
   const [exchangeRate, setExchangeRate] = useState<IExchangeRate | null>(null);
   const [baseAmount, setBaseAmount] = useState<string>('100');
