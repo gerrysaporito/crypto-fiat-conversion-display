@@ -4,8 +4,8 @@ import { Footer } from '../components/modules/Footer';
 
 const Home: NextPage = () => {
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center">
-      <div className="w-full h-full flex flex-col justify-center items-center">
+    <div className="w-full sm:h-full flex flex-col justify-center items-center">
+      <div className="w-full h-screen sm:h-full flex flex-col justify-center items-center">
         <ConversionDisplay />
       </div>
       <Footer />
