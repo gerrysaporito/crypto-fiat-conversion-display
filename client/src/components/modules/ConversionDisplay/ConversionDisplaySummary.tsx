@@ -61,31 +61,31 @@ export const ConversionDisplaySummary: React.FC<IConversionDisplaySummary> = (
 
       {/* Card */}
       {showSummary && (
-        <div className="h-[90px] text-black flex flex-col rounded-b-lg">
+        <div className="min-h-[105px] sm:min-h-[85px] text-black flex flex-col rounded-b-lg">
           <div className="rounded-lg overflow-hidden">
-            <div className="pl-4 pr-2 pb-3 pt-3 bg-gray-100">
-              {/* Summary Banner */}
-              <div className="flex justify-between">
-                {!error ? (
-                  <p>
-                    You get{' '}
-                    <span className="font-bold tabular-nums">
-                      {Cleaning.cleanStringAmount(desiredAmount)}{' '}
-                      {desiredCurrency}
-                    </span>{' '}
-                    for{' '}
-                    <span className="font-bold tabular-nums">
-                      {Cleaning.cleanStringAmount(baseAmount)} {baseCurrency}
-                    </span>
-                  </p>
-                ) : (
-                  <p>No summary available for this conversion.</p>
-                )}
-                <button onClick={onCaretClick}>
+            <button onClick={onCaretClick} className="w-full">
+              <div className="pl-4 pr-2 pb-3 pt-3 bg-gray-100">
+                {/* Summary Banner */}
+                <div className="flex justify-between">
+                  {!error ? (
+                    <p>
+                      You get{' '}
+                      <span className="font-bold tabular-nums">
+                        {Cleaning.cleanStringAmount(desiredAmount)}{' '}
+                        {desiredCurrency}
+                      </span>{' '}
+                      for{' '}
+                      <span className="font-bold tabular-nums">
+                        {Cleaning.cleanStringAmount(baseAmount)} {baseCurrency}
+                      </span>
+                    </p>
+                  ) : (
+                    <p>No summary available for this conversion.</p>
+                  )}
                   <Caret type={showExtra ? 'up' : 'down'} />
-                </button>
+                </div>
               </div>
-            </div>
+            </button>
 
             {/* Drawer */}
             <div className="flex h-full">
