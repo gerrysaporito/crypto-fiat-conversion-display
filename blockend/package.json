@@ -1,11 +1,24 @@
 {
   "name": "hardhat-project",
+  "scripts": {
+    "rinkeby:deploy": "bash scripts/streamline/deploy.sh",
+    "rinkeby:load-contract": "bash scripts/streamline/loadContract.sh",
+    "rinkeby:verify-contract": "bash scripts/streamline/verifyContract.sh"
+  },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.6",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@types/dotenv": "^8.2.0",
     "chai": "^4.3.6",
     "ethereum-waffle": "^3.4.4",
     "ethers": "^5.6.9",
     "hardhat": "^2.9.9"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-etherscan": "^3.1.0",
+    "dotenv": "^16.0.1",
+    "hardhat-gas-reporter": "^1.0.8",
+    "solidity-coverage": "^0.7.21",
+    "web3": "^1.7.4"
   }
 }
