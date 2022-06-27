@@ -62,6 +62,8 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       console.warn(`🤷‍♀️ Unhandled event type: ${event.type}`);
     }
 
+    // Run function to buy crypto
+
     // Return a response to acknowledge receipt of the event.
     res.json({ received: true });
   } else {

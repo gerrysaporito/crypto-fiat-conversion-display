@@ -17,7 +17,6 @@ const ResultPage: NextPage = () => {
       : null,
     fetchGetJSON
   );
-  console.log(data, error);
 
   if (error) return <div>failed to load</div>;
 
