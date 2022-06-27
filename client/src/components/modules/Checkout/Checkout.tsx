@@ -1,21 +1,6 @@
-import { useEffect, useState } from 'react';
-import {
-  VStack,
-  useDisclosure,
-  Button,
-  Text,
-  HStack,
-  Select,
-  Input,
-  Box,
-} from '@chakra-ui/react';
-import { CheckCircleIcon, WarningIcon } from '@chakra-ui/icons';
-import { SelectWalletModal } from './SelectWalletModal';
+import { useEffect } from 'react';
 import { useWeb3React } from '@web3-react/core';
-import { Tooltip } from '@chakra-ui/react';
-import { networkParams } from './networks';
 import { connectors, TProvider } from './web3';
-import { Cleaning } from '../../../utils/utility/Cleaning';
 import { Connect } from './Connect';
 
 interface ICheckout {}
