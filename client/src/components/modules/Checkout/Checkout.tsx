@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { connectors, TProvider } from './web3';
 import { Connect } from './Connect';
+import CheckoutForm from './CheckoutForm';
 
 interface ICheckout {}
 
@@ -20,6 +21,7 @@ export const Checkout: React.FC<ICheckout> = () => {
 
   return (
     <div>
+      <CheckoutForm />
       <Connect />
     </div>
   );
