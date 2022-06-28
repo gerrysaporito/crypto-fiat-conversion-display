@@ -27,7 +27,7 @@ contract Exchange {
       payable(msg.sender).transfer(_amount);
     }
 
-    function send(address payable _addr, uint256 _amount) external payable validAmount(_amount) onlyOwner {
+    function transfer(address payable _addr, uint256 _amount) external payable validAmount(_amount) onlyOwner {
         _addr.transfer(_amount);
     }
 

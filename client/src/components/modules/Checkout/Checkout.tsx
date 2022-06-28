@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useWeb3React } from '@web3-react/core';
-import { connectors, TProvider } from './web3';
+import { connectors, TProvider } from './_web3';
 import { Connect } from './Connect';
 import CheckoutForm from './CheckoutForm';
 
@@ -20,9 +20,20 @@ export const Checkout: React.FC<ICheckout> = () => {
   }, []);
 
   return (
-    <div>
-      <CheckoutForm />
-      <Connect />
+    <div
+      className={[
+        'relative w-full max-w-[90%] sm:max-w-md min-h-[475px]',
+        'rounded-2xl overflow-hidden',
+        'text-sm',
+        'shadow-md',
+      ].join(' ')}
+      style={{ backgroundColor: '#111111', color: 'white' }}
+    >
+      <div className={['mx-10 my-10', 'grid grid-cols-1 gap-5'].join(' ')}>
+        <CheckoutForm />
+        <Connect />
+        <div className="text-[#FF0000]">{'error'}</div>
+      </div>
     </div>
   );
 };

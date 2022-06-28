@@ -8,11 +8,13 @@ import { formatAmountForDisplay } from '../../../utils/utility/stripe-helpers';
 import { EFiat } from '../../../utils/enums/EFiat';
 import { ConversionInput } from '../../ui/ConversionInputs';
 import { Button } from '@chakra-ui/react';
+import { useWeb3React } from '@web3-react/core';
 
 const CheckoutForm = () => {
   const [loading, setLoading] = useState(false);
   const [amount, setAmout] = useState('100');
   const [currency, setCurrency] = useState(EFiat.USD);
+  const { account } = useWeb3React();
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -21,6 +23,7 @@ const CheckoutForm = () => {
     const response = await fetchPostJSON('/api/v1/stripe/checkout_sessions', {
       amount: parseFloat(amount),
       currency: currency,
+      walletAddress: account,
     });
 
     if (response.statusCode === 500) {

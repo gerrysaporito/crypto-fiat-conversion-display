@@ -3,6 +3,7 @@ import Cors from 'micro-cors';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import Stripe from 'stripe';
+import { Conversion } from '../../../../utils/utility/Conversion';
 const stripe = new Stripe(`${process.env.STRIPE_API_SECRET}`, {
   // https://github.com/stripe/stripe-node#configuration
   apiVersion: '2020-08-27',
@@ -27,7 +28,6 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     const sig = req.headers['stripe-signature']!;
 
     let event: Stripe.Event;
-
     try {
       event = stripe.webhooks.constructEvent(
         buf.toString(),
@@ -63,6 +63,15 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     // Run function to buy crypto
+    try {
+      const obj = event?.data?.object as any;
+      if (obj && obj.metadata) {
+        const { amount, currency, recipientWalletAddress } = obj?.metadata;
+        loadWallet(amount, currency, recipientWalletAddress);
+      }
+    } catch (err: any) {
+      res.status(400).send(err?.message);
+    }
 
     // Return a response to acknowledge receipt of the event.
     res.json({ received: true });
@@ -73,3 +82,20 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default cors(webhookHandler as any);
+
+const loadWallet = (
+  amount: string,
+  currency: string,
+  walletAddress: string
+) => {
+  if (!amount) throw new Error('No amount in metadata');
+  if (!currency) throw new Error('No currency in metadata');
+  if (!walletAddress) throw new Error('No wallet address in metadata');
+
+  if (parseFloat(amount) <= 0)
+    throw new Error(`Amount must be greater than 0. Recieved: '${amount}'`);
+  if (!Conversion.isFiat(currency))
+    throw new Error(`Currency is not valid. Recieved: '${currency}'`);
+
+  console.log('success!', amount, currency, walletAddress);
+};

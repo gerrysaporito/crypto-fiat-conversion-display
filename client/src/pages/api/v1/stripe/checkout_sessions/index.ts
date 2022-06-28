@@ -13,9 +13,13 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { amount, currency } = req.body;
+    const {
+      amount,
+      currency,
+      walletAddress: recipientWalletAddress,
+    } = req.body;
     try {
-      checkValidQueryParams(amount, currency);
+      checkValidQueryParams(amount, currency, recipientWalletAddress);
 
       // Create Checkout Sessions from body params.
       const params: Stripe.Checkout.SessionCreateParams = {
@@ -29,6 +33,11 @@ export default async function handler(
             quantity: 1,
           },
         ],
+        metadata: {
+          amount,
+          currency,
+          recipientWalletAddress,
+        },
         success_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
       };
@@ -54,11 +63,14 @@ export default async function handler(
  */
 const checkValidQueryParams = (
   amount: string | string[],
-  currency: string | string[]
+  currency: string | string[],
+  walletAddress: string | string[]
 ) => {
   // Check if all parameters are present
   if (!!!amount) throw new Error(`Missing amount parameter from query`);
   if (!!!currency) throw new Error(`Missing currency parameter from query`);
+  if (!!!walletAddress)
+    throw new Error(`Missing wallet address parameter from query`);
 
   // Check if amount is a valid number
   if (isNaN(Number(amount)))

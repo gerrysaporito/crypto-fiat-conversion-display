@@ -12,7 +12,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { useWeb3React } from '@web3-react/core';
-import { connectors, TProvider } from './web3';
+import { connectors, TProvider } from './_web3';
 
 import COINBASE_WALLET_LOGO from '../../../assets/logos/coinbase-wallet.png';
 import METAMASK_LOGO from '../../../assets/logos/metamask.png';

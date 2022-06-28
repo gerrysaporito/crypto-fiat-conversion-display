@@ -3,6 +3,7 @@
   "scripts": {
     "rinkeby:deploy": "bash scripts/streamline/deploy.sh",
     "rinkeby:load-contract": "bash scripts/streamline/loadContract.sh",
+    "rinkeby:send-eth": "bash scripts/streamline/sendEth.sh",
     "rinkeby:verify-contract": "bash scripts/streamline/verifyContract.sh"
   },
   "devDependencies": {

@@ -7,7 +7,6 @@ import { fetchGetJSON } from '../utils/utility/api-helpers';
 
 const ResultPage: NextPage = () => {
   const router = useRouter();
-  console.log(router.query);
 
   // Fetch CheckoutSession from static page via
   // https://nextjs.org/docs/basic-features/data-fetching#static-generation
