@@ -33,14 +33,13 @@ export default async function handler(
             quantity: 1,
           },
         ],
-        client_reference_id: `${recipientWalletAddress}||${amount}||${currency}`,
         metadata: {
           amount,
           currency,
           recipientWalletAddress,
         },
-        success_url: `${req.headers.origin}/checkout?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${req.headers.origin}/checkout?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
       };
       const checkoutSession: Stripe.Checkout.Session =
         await stripe.checkout.sessions.create(params);
