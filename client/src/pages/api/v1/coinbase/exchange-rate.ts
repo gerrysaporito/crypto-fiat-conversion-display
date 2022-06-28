@@ -94,7 +94,7 @@ const checkValidQueryParams = (
  *
  * Calls the coinbase API to get the current prices for for the user.
  */
-const getConversionData = async (
+export const getConversionData = async (
   base: string,
   desired: string
 ): Promise<IExchangeRate> => {

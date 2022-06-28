@@ -22,7 +22,7 @@ async function main() {
   const [owner] = await hre.ethers.getSigners();
 
   // Send eth to contract from wallet
-  owner.sendTransaction({
+  await owner.sendTransaction({
     to: process.env.CONTRACT_ADDRESS,
     value: amount,
   });

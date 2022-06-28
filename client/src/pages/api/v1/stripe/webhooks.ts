@@ -1,9 +1,15 @@
 import { buffer } from 'micro';
 import Cors from 'micro-cors';
 import { NextApiRequest, NextApiResponse } from 'next';
-
 import Stripe from 'stripe';
+import { Contract } from 'web3-eth-contract';
+import Web3 from 'web3';
+
+import { getConversionData } from '../coinbase/exchange-rate';
+import { ECrypto } from '../../../../utils/enums/ECrypto';
 import { Conversion } from '../../../../utils/utility/Conversion';
+import { EFiat } from '../../../../utils/enums/EFiat';
+import { ABI } from '../../../../../data/abi';
 const stripe = new Stripe(`${process.env.STRIPE_API_SECRET}`, {
   // https://github.com/stripe/stripe-node#configuration
   apiVersion: '2020-08-27',
@@ -58,19 +64,24 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     } else if (event.type === 'charge.succeeded') {
       const charge = event.data.object as Stripe.Charge;
       console.log(`💵 Charge id: ${charge.id}`);
+    } else if (event.type === 'checkout.session.completed') {
+      console.log(`Checkout Session Completed`);
+      const charge = event.data.object as any;
+      // TODO: Run function to buy crypto after chekcing if this is a charge
+      try {
+        const obj = event?.data?.object as any;
+        if (obj && obj.metadata) {
+          const { amount, currency, recipientWalletAddress } = obj?.metadata;
+
+          await loadWallet(amount, currency, recipientWalletAddress);
+        }
+      } catch (err: any) {
+        console.error(err);
+        res.status(400).send(err);
+      }
+      console.log(`💵 Charge id: ${charge.id}`);
     } else {
       console.warn(`🤷‍♀️ Unhandled event type: ${event.type}`);
-    }
-
-    // Run function to buy crypto
-    try {
-      const obj = event?.data?.object as any;
-      if (obj && obj.metadata) {
-        const { amount, currency, recipientWalletAddress } = obj?.metadata;
-        loadWallet(amount, currency, recipientWalletAddress);
-      }
-    } catch (err: any) {
-      res.status(400).send(err?.message);
     }
 
     // Return a response to acknowledge receipt of the event.
@@ -83,7 +94,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 export default cors(webhookHandler as any);
 
-const loadWallet = (
+const loadWallet = async (
   amount: string,
   currency: string,
   walletAddress: string
@@ -97,5 +108,45 @@ const loadWallet = (
   if (!Conversion.isFiat(currency))
     throw new Error(`Currency is not valid. Recieved: '${currency}'`);
 
-  console.log('success!', amount, currency, walletAddress);
+  const exchangeRate = await getConversionData(currency, ECrypto.ETH);
+  const ethAmount = Conversion.getExchangedAmount({
+    exchangeRate,
+    amount: parseFloat(amount),
+    base: currency as EFiat,
+    desired: ECrypto.ETH,
+  });
+
+  await send(walletAddress, ethAmount);
+  console.log('success!', ethAmount, walletAddress);
+};
+
+const send = async (
+  receiver: string,
+  value: string
+): // @ts-ignore: PromiEvent extends Promise
+PromiEvent<TransactionReceipt> => {
+  const provider = new Web3.providers.HttpProvider(
+    process.env.RINKEBY_API_URL as string
+  );
+
+  const web3 = new Web3(provider);
+
+  const contract = new web3.eth.Contract(
+    ABI as any,
+    process.env.CONTRACT_ADDRESS
+  );
+  let transfer = contract.methods.transfer(receiver, web3.utils.toWei(value));
+  const encodedABI = transfer.encodeABI();
+  const signedTx = await web3.eth.accounts.signTransaction(
+    {
+      data: encodedABI,
+      from: process.env.PUBLIC_KEY,
+      gas: 2000000,
+      to: contract.options.address,
+    },
+    `0x${process.env.PRIVATE_KEY}`
+  );
+
+  // @ts-ignore - rawTransaction exists
+  return web3.eth.sendSignedTransaction(signedTx!.rawTransaction);
 };
