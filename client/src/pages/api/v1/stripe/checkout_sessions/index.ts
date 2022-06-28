@@ -8,6 +8,12 @@ const stripe = new Stripe(`${process.env.STRIPE_API_SECRET}`!, {
   apiVersion: '2020-08-27',
 });
 
+/*
+ * @Endpoint: Creates and returns a stripe checkout session.
+ * @Param: amount - The amount in the current currency.
+ * @Param: currency - The base currency.
+ * @Param: walletAddress - The recipients wallet address.
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -41,6 +47,8 @@ export default async function handler(
         success_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
       };
+
+      // Execute checkout session
       const checkoutSession: Stripe.Checkout.Session =
         await stripe.checkout.sessions.create(params);
 

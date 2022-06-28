@@ -6,6 +6,10 @@ const stripe = new Stripe(process.env.STRIPE_API_SECRET!, {
   apiVersion: '2020-08-27',
 });
 
+/*
+ * @Endpoint: Finds and returns a stripe checkout session.
+ * @Query: id - The checkout session's ID
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
