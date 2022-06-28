@@ -16,9 +16,13 @@ export const Connect = () => {
   return (
     <>
       {active ? (
-        <Button onClick={disconnect}>Disconnect</Button>
+        <Button onClick={disconnect} color="black">
+          Disconnect Wallet
+        </Button>
       ) : (
-        <Button onClick={onOpen}>Connect Wallet</Button>
+        <Button onClick={onOpen} color="black">
+          Connect Wallet
+        </Button>
       )}
       <SelectWalletModal isOpen={isOpen} closeModal={onClose} />
     </>

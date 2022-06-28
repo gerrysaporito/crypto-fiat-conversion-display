@@ -11,6 +11,7 @@ interface ConversionInput {
   onChangeCurrency: (value: any) => void;
   onChangeAmount: (value: any) => void;
   selectedCurrency: keyof typeof EFiat | keyof typeof ECrypto;
+  disabled?: boolean;
 }
 
 /*
@@ -24,6 +25,7 @@ export const ConversionInput: React.FC<ConversionInput> = ({
   onChangeAmount,
   onChangeCurrency,
   selectedCurrency,
+  disabled,
 }) => {
   const placeholderAmount = Conversion.isFiat(selectedCurrency) ? '100' : '0.1';
   const currencies = Object.keys(
@@ -75,6 +77,7 @@ export const ConversionInput: React.FC<ConversionInput> = ({
               'bg-gray-100 text-black',
               'text-sm sm:text-base',
             ].join(' ')}
+            disabled={disabled}
           />
           <button
             onClick={onClickUpdateShowDrawer}
@@ -84,11 +87,15 @@ export const ConversionInput: React.FC<ConversionInput> = ({
               'bg-[#EDEDEF] text-black',
               'text-sm sm:text-base',
             ].join(' ')}
+            disabled={disabled}
+            style={{ cursor: disabled ? 'pointer' : 'cursor' }}
           >
             {selectedCurrency}
-            <span className="h-full flex items-center">
-              <Caret type="down" />
-            </span>
+            {!disabled && (
+              <span className="h-full flex items-center">
+                <Caret type="down" />
+              </span>
+            )}
           </button>
         </div>
       </div>
