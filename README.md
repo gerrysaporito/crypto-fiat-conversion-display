@@ -40,7 +40,8 @@ This project gave me a chance to work with new technolgies including:
 
 - This will install a clean node_modules directory and create a production build
 
-5. Once its done, run `npm start` and open up http://localhost:3000
+5. Once its done, run `npm run dev` and open up http://localhost:3000
+6. In another terminal, run `npm run dev:stripe-webhook`
 
 ### Notes 🖍
 
