@@ -19,7 +19,7 @@ interface ICheckoutForm {
 }
 
 const CheckoutForm: React.FC<ICheckoutForm> = ({ cooldown }) => {
-  const _cooldown = cooldown || 20;
+  const _cooldown = cooldown || 30;
   const { account } = useWeb3React();
 
   /*
