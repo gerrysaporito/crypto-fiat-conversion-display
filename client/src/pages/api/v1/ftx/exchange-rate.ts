@@ -16,7 +16,7 @@ const exchangeRateHandlers = async (
 ) => {
   const { base, desired } = req.query;
   try {
-    checkValidQueryParams(base, desired);
+    checkValidQueryParams(base as string, desired as string);
 
     // Checked types above
     // @ts-ignore

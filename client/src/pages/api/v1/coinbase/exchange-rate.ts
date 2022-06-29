@@ -1,7 +1,5 @@
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ECrypto } from '../../../../utils/enums/ECrypto';
-import { EFiat } from '../../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../../utils/utility/Conversion';
 
@@ -18,7 +16,7 @@ const exchangeRateHandlers = async (
 ) => {
   const { base, desired } = req.query;
   try {
-    checkValidQueryParams(base, desired);
+    checkValidQueryParams(base as string, desired as string);
 
     // Checked types above
     // @ts-ignore
