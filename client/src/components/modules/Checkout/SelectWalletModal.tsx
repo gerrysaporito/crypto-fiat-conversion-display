@@ -18,7 +18,6 @@ import COINBASE_WALLET_LOGO from '../../../assets/logos/coinbase-wallet.png';
 import METAMASK_LOGO from '../../../assets/logos/metamask.png';
 import WALLETCONNECT_LOGO from '../../../assets/logos/walletconnect.png';
 import Image from 'next/image';
-import { WALLETCONNECT } from 'web3modal/dist/providers/providers';
 
 interface IModal {
   isOpen: boolean;
