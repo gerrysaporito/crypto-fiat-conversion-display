@@ -27,37 +27,3 @@ export const connectors = {
 };
 
 export type TProvider = 'coinbaseWallet' | 'walletConnect' | 'injected';
-
-// export const sendAmount = async (
-//   cryptoAmount: string,
-//   account?: string | null
-// ) => {
-//   console.log('sending ethereum...');
-//   const amountToWei = web3.utils.toWei(cryptoAmount, 'ether');
-//   const result = contract.methods
-//     .transfer(account, amountToWei)
-//     .send({})
-//     .then((result: string) => {
-//       console.log(
-//         `✅ Check out your transaction on Etherscan: https://etherscan.io/tx/` +
-//           result
-//       );
-//       return {
-//         success: true,
-//         status:
-//           `✅ Check out your transaction on Etherscan: https://etherscan.io/tx/` +
-//           result,
-//       };
-//     })
-//     .catch((err: any) => {
-//       console.log('Mint transaction failed!');
-//       return {
-//         success: false,
-//         status: '😥 Something went wrong: ' + err.message,
-//       };
-//     })
-//     .finally((result: any) => {
-//       return result;
-//     });
-//   return result;
-// };
