@@ -7,8 +7,8 @@ const ENDPOINT = `https://ftx.com/api`;
 
 /*
  * @Endpoint: returns the current price for a currency from a base currency.
- * @Param: base - The owned currency.
- * @Param: desired - The desired currency.
+ * @Param: Query - The owned currency.
+ * @Param: Query - The desired currency.
  */
 const exchangeRateHandlers = async (
   req: NextApiRequest,
@@ -16,7 +16,7 @@ const exchangeRateHandlers = async (
 ) => {
   const { base, desired } = req.query;
   try {
-    checkValidQueryParams(base, desired);
+    checkValidQueryParams(base as string, desired as string);
 
     // Checked types above
     // @ts-ignore

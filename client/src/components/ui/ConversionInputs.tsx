@@ -8,13 +8,10 @@ interface ConversionInput {
   description: string;
   drawerTitle: string;
   amount: string;
-  setAmount: React.Dispatch<React.SetStateAction<string>>;
+  onChangeCurrency: (value: any) => void;
+  onChangeAmount: (value: any) => void;
   selectedCurrency: keyof typeof EFiat | keyof typeof ECrypto;
-  setSelectedCurrency: React.Dispatch<React.SetStateAction<EFiat | ECrypto>>;
-  lastUpdated: 'baseAmount' | 'desiredAmount';
-  setLastUpdated: React.Dispatch<
-    React.SetStateAction<'baseAmount' | 'desiredAmount'>
-  >;
+  disabled?: boolean;
 }
 
 /*
@@ -25,11 +22,10 @@ export const ConversionInput: React.FC<ConversionInput> = ({
   description,
   drawerTitle,
   amount,
-  setAmount,
+  onChangeAmount,
+  onChangeCurrency,
   selectedCurrency,
-  setSelectedCurrency,
-  setLastUpdated,
-  lastUpdated,
+  disabled,
 }) => {
   const placeholderAmount = Conversion.isFiat(selectedCurrency) ? '100' : '0.1';
   const currencies = Object.keys(
@@ -42,8 +38,7 @@ export const ConversionInput: React.FC<ConversionInput> = ({
   const { drawer, onClickUpdateShowDrawer } = useDrawer<EFiat | ECrypto>({
     title: drawerTitle,
     onClickFn: (item: EFiat | ECrypto) => {
-      setLastUpdated(lastUpdated);
-      setSelectedCurrency(item);
+      if (onChangeCurrency) onChangeCurrency(item);
     },
     optionKeys: currencies as unknown as (EFiat | ECrypto)[],
     optionMap: { ...Fiat, ...Crypto },
@@ -56,15 +51,13 @@ export const ConversionInput: React.FC<ConversionInput> = ({
     event
   ) => {
     event.preventDefault();
-    event.persist();
     let value = event.target.value;
     const decimals = value.split('.')[1];
 
     if (Conversion.isFiat(selectedCurrency) && decimals?.length > 2) return;
     if (Conversion.isCrypto(selectedCurrency) && decimals?.length > 5) return;
 
-    setLastUpdated(lastUpdated);
-    setAmount(value);
+    if (onChangeAmount) onChangeAmount(value);
   };
 
   return (
@@ -84,6 +77,7 @@ export const ConversionInput: React.FC<ConversionInput> = ({
               'bg-gray-100 text-black',
               'text-sm sm:text-base',
             ].join(' ')}
+            disabled={disabled}
           />
           <button
             onClick={onClickUpdateShowDrawer}
@@ -93,11 +87,15 @@ export const ConversionInput: React.FC<ConversionInput> = ({
               'bg-[#EDEDEF] text-black',
               'text-sm sm:text-base',
             ].join(' ')}
+            disabled={disabled}
+            style={{ cursor: disabled ? 'pointer' : 'cursor' }}
           >
             {selectedCurrency}
-            <span className="h-full flex items-center">
-              <Caret type="down" />
-            </span>
+            {!disabled && (
+              <span className="h-full flex items-center">
+                <Caret type="down" />
+              </span>
+            )}
           </button>
         </div>
       </div>

@@ -24,4 +24,18 @@ export class Cleaning {
 
     return '-1';
   };
+
+  static truncateAddress = (address?: string | null) => {
+    if (!address) return 'No Account';
+    const match = address.match(
+      /^(0x[a-zA-Z0-9]{2})[a-zA-Z0-9]+([a-zA-Z0-9]{2})$/
+    );
+    if (!match) return address;
+    return `${match[1]}…${match[2]}`;
+  };
+
+  static toHex = (num: any) => {
+    const val = Number(num);
+    return '0x' + val.toString(16);
+  };
 }

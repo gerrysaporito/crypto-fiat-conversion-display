@@ -1,7 +1,5 @@
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ECrypto } from '../../../../utils/enums/ECrypto';
-import { EFiat } from '../../../../utils/enums/EFiat';
 import { IExchangeRate } from '../../../../utils/types/IExchangeRate';
 import { Conversion } from '../../../../utils/utility/Conversion';
 
@@ -9,8 +7,8 @@ const ENDPOINT = `https://api.coinbase.com`;
 
 /*
  * @Endpoint: returns the current price for a currency from a base currency.
- * @Param: base - The owned currency.
- * @Param: desired - The desired currency.
+ * @Query: base - The owned currency.
+ * @Query: desired - The desired currency.
  */
 const exchangeRateHandlers = async (
   req: NextApiRequest,
@@ -18,7 +16,7 @@ const exchangeRateHandlers = async (
 ) => {
   const { base, desired } = req.query;
   try {
-    checkValidQueryParams(base, desired);
+    checkValidQueryParams(base as string, desired as string);
 
     // Checked types above
     // @ts-ignore
@@ -72,10 +70,6 @@ const checkValidQueryParams = (
   if (!!!base) throw new Error(`Missing base parameter from query`);
   if (!!!desired) throw new Error(`Missing desired parameter from query`);
 
-  // Check if amount is a valid number
-  // if (isNaN(Number(amount)))
-  //   throw new Error(`Amount must be of type number: '${amount}'`);
-
   // Check if selected currencies are of type string
   if (typeof base !== 'string')
     throw new Error(`Base must be a string: '${base}'`);
@@ -94,7 +88,7 @@ const checkValidQueryParams = (
  *
  * Calls the coinbase API to get the current prices for for the user.
  */
-const getConversionData = async (
+export const getConversionData = async (
   base: string,
   desired: string
 ): Promise<IExchangeRate> => {

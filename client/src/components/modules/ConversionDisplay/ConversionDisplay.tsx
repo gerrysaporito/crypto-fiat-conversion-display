@@ -21,13 +21,12 @@ interface IConversionDisplay {
 export const ConversionDisplay: React.FC<IConversionDisplay> = ({
   cooldown,
 }) => {
-  const _cooldown = cooldown || 20;
+  const _cooldown = cooldown || 30;
 
   /*
    * State variables.
    */
   const [timeLeft, setTimeLeft] = useState<number>(_cooldown);
-  // const [error, setError] = useState<string>();
   const [exchange, setExchange] = useState<EExchange>(EExchange.COINBASE);
   const [exchangeRate, setExchangeRate] = useState<IExchangeRate | null>(null);
   const [baseAmount, setBaseAmount] = useState<string>('100');
@@ -202,21 +201,29 @@ export const ConversionDisplay: React.FC<IConversionDisplay> = ({
           description="I want to spend"
           drawerTitle="Select Currency"
           amount={baseAmount}
-          setAmount={setBaseAmount}
+          onChangeAmount={(value: any) => {
+            setBaseAmount(value);
+            setLastUpdated('baseAmount');
+          }}
+          onChangeCurrency={(value: any) => {
+            setBaseCurrency(value);
+            setLastUpdated('baseAmount');
+          }}
           selectedCurrency={baseCurrency}
-          setSelectedCurrency={setBaseCurrency}
-          lastUpdated="baseAmount"
-          setLastUpdated={setLastUpdated}
         />
         <ConversionInput
           description="I want to buy"
           drawerTitle="Select Currency"
           amount={desiredAmount}
-          setAmount={setDesiredAmount}
+          onChangeAmount={(value: any) => {
+            setDesiredAmount(value);
+            setLastUpdated('desiredAmount');
+          }}
+          onChangeCurrency={(value: any) => {
+            setDesiredCurrency(value);
+            setLastUpdated('desiredAmount');
+          }}
           selectedCurrency={desiredCurrency}
-          setSelectedCurrency={setDesiredCurrency}
-          lastUpdated="desiredAmount"
-          setLastUpdated={setLastUpdated}
         />
         <ConversionDisplaySummary
           baseCurrency={baseCurrency}
